@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Before — Cambodia Weather</title>
+<meta name="description" content="Before — real-time Cambodia weather dashboard for Phnom Penh and all provinces, with Khmer and English, light and dark modes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Khmer:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{
+  --bg:#f7f5fb; --surface:#ffffff; --surface2:#f1eef8; --text:#29313d; --muted:#78808d;
+  --line:#e6e2ef; --accent:#8b83d9; --accent2:#72b8ad; --warm:#efb98e; --rain:#8ebbe8;
+  --shadow:0 18px 50px rgba(72,59,112,.10); --radius:24px;
+}
+[data-theme="dark"]{
+  --bg:#151721; --surface:#20232e; --surface2:#292c38; --text:#f0f1f6; --muted:#a9adba;
+  --line:#363a48; --accent:#a9a2f0; --accent2:#8ed3c7; --warm:#f1bd98; --rain:#9dcaf3;
+  --shadow:0 18px 50px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 8% 0%,rgba(183,170,239,.20),transparent 30%),radial-gradient(circle at 92% 12%,rgba(134,206,190,.18),transparent 28%),var(--bg);color:var(--text);font-family:Inter,"Noto Sans Khmer",sans-serif}
+button,select{font:inherit}
+.app{max-width:1500px;margin:auto;padding:22px}
+header{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:13px}
+.logo{width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,#bdb6f2,#8ed1c3);display:grid;place-items:center;box-shadow:var(--shadow);font-size:25px}
+.brand h1{margin:0;font-size:25px;letter-spacing:-.04em}.brand p{margin:3px 0 0;color:var(--muted);font-size:12px}
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn,.select{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:14px;padding:10px 13px;cursor:pointer}
+.btn:hover{transform:translateY(-1px)}
+.hero{display:grid;grid-template-columns:1.45fr .85fr;gap:18px;margin-bottom:18px}
+.card{background:rgba(255,255,255,.78);background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.hero-main{padding:28px;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(189,182,242,.30),rgba(142,209,195,.18)),var(--surface)}
+[data-theme="dark"] .hero-main{background:linear-gradient(135deg,rgba(126,117,203,.18),rgba(91,160,146,.10)),var(--surface)}
+.eyebrow{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.12em}
+.hero-row{display:flex;justify-content:space-between;align-items:center;gap:18px}
+.bigtemp{font-size:72px;line-height:.9;font-weight:800;letter-spacing:-.07em;margin:12px 0 8px}
+.condition{font-size:18px;font-weight:600}
+.meta{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}.pill{padding:8px 11px;border-radius:999px;background:var(--surface2);font-size:12px;color:var(--muted)}
+.weather-art{font-size:92px;filter:drop-shadow(0 14px 18px rgba(80,70,120,.15));animation:float 5s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-7px)}}
+.hero-side{padding:22px}.side-title{font-weight:700;margin-bottom:13px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{padding:14px;border-radius:17px;background:var(--surface2)}.stat b{display:block;font-size:18px;margin-top:4px}.stat span{color:var(--muted);font-size:11px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:25px 2px 12px}.section-head h2{margin:0;font-size:20px}.section-head p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+.forecast{padding:17px}.forecast .day{font-weight:700}.forecast .date{font-size:11px;color:var(--muted);margin-top:3px}.fc-icon{font-size:34px;margin:13px 0 7px}.hi{font-size:20px;font-weight:800}.lo{color:var(--muted);font-size:13px}.rainbar{height:5px;border-radius:9px;background:var(--surface2);overflow:hidden;margin:13px 0 7px}.rainbar i{display:block;height:100%;background:linear-gradient(90deg,var(--rain),var(--accent));border-radius:9px}.small{font-size:11px;color:var(--muted)}
+.layout{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.map{min-height:520px;overflow:hidden}.map #map{height:100%;min-height:520px;border-radius:var(--radius)}
+.map-note{padding:15px 18px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+.regions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.region{padding:18px;min-height:150px;position:relative;overflow:hidden}.region:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;right:-25px;top:-25px;background:rgba(139,131,217,.10)}.region h3{margin:0 0 5px;font-size:15px}.region p{margin:0;color:var(--muted);font-size:11px}.region .rtemp{font-size:31px;font-weight:800;margin:17px 0 4px}.alert{margin-top:16px;padding:13px 15px;border-radius:16px;background:rgba(239,185,142,.15);border:1px solid rgba(239,185,142,.35);font-size:12px}
+.province-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:11px}.province{padding:14px}.province-top{display:flex;justify-content:space-between;gap:8px}.province-name{font-weight:700;font-size:12px}.province-temp{font-weight:800;font-size:17px}.province-sub{font-size:10px;color:var(--muted);margin-top:6px}.province-rain{font-size:10px;color:#6c8eb0;margin-top:8px}
+.table-wrap{overflow:auto}.hourly{width:100%;border-collapse:collapse;min-width:720px}.hourly th,.hourly td{text-align:left;padding:11px;border-bottom:1px solid var(--line);font-size:11px}.hourly th{color:var(--muted);font-weight:600}.hourly td b{font-size:14px}
+footer{padding:28px 4px 10px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.loading{opacity:.55}.error{color:#b56f55}
+@media(max-width:1100px){.hero,.layout{grid-template-columns:1fr}.grid{grid-template-columns:repeat(4,1fr)}.province-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:800px){.app{padding:12px}.grid{grid-template-columns:repeat(2,1fr)}.province-grid,.regions{grid-template-columns:repeat(2,1fr)}.hero-row{align-items:flex-start}.bigtemp{font-size:58px}.weather-art{font-size:65px}}
+@media(max-width:520px){header{align-items:flex-start}.controls{justify-content:flex-end}.grid,.province-grid,.regions{grid-template-columns:1fr 1fr}.bigtemp{font-size:48px}.hero-main{padding:20px}.weather-art{font-size:50px}}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--surface);color:var(--text)}
+.marker{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:2px solid var(--accent);box-shadow:0 5px 14px rgba(0,0,0,.16);font-size:16px}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand"><div class="logo">☁️</div><div><h1>Before</h1><p id="subtitle">Cambodia Weather Intelligence</p></div></div>
+  <div class="controls">
+    <select id="lang" class="select" aria-label="Language"><option value="en">English</option><option value="km">ខ្មែរ</option></select>
+    <button class="btn" id="theme" title="Toggle dark mode">◐ <span id="themeText">Dark</span></button>
+    <button class="btn" id="refresh">↻ <span id="refreshText">Refresh</span></button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="card hero-main">
+    <div class="eyebrow" id="capitalLabel">PHNOM PENH • LIVE</div>
+    <div class="hero-row">
+      <div>
+        <div class="bigtemp" id="capitalTemp">--°</div>
+        <div class="condition" id="capitalCondition">Loading…</div>
+        <div class="meta">
+          <span class="pill" id="feels">Feels --°</span><span class="pill" id="humidity">Humidity --%</span>
+          <span class="pill" id="wind">Wind -- km/h</span><span class="pill" id="rain">Rain --%</span>
+        </div>
+      </div>
+      <div class="weather-art" id="capitalIcon">🌤️</div>
+    </div>
+  </div>
+  <div class="card hero-side">
+    <div class="side-title" id="quickTitle">Quick conditions</div>
+    <div class="stat-grid">
+      <div class="stat"><span id="pressureLabel">Pressure</span><b id="pressure">-- hPa</b></div>
+      <div class="stat"><span id="cloudLabel">Cloud cover</span><b id="cloud">--%</b></div>
+      <div class="stat"><span id="gustLabel">Wind gust</span><b id="gust">-- km/h</b></div>
+      <div class="stat"><span id="updateLabel">Updated</span><b id="updated">--:--</b></div>
+    </div>
+    <div class="alert" id="alert">Weather summary is model-based. Check official MOWRAM advisories for severe-weather warnings.</div>
+  </div>
+</section>
+
+<div class="section-head"><div><h2 id="forecastTitle">Phnom Penh · 7-day outlook</h2><p id="forecastDesc">Daily temperature and precipitation probability</p></div></div>
+<div class="grid" id="forecast"></div>
+
+<div class="section-head"><div><h2 id="regionTitle">Cambodia regional outlook</h2><p id="regionDesc">Lowlands, highlands and coastal weather patterns</p></div></div>
+<div class="regions" id="regions"></div>
+
+<div class="section-head"><div><h2 id="mapTitle">Cambodia weather map</h2><p id="mapDesc">Live province markers — click a marker for details</p></div></div>
+<div class="card map"><div id="map"></div><div class="map-note" id="mapNote">Pastel markers are refreshed hourly. Map © OpenStreetMap contributors.</div></div>
+
+<div class="section-head"><div><h2 id="provinceTitle">All Cambodia provinces & capital</h2><p id="provinceDesc">Current conditions across 25 locations</p></div></div>
+<div class="province-grid" id="provinces"></div>
+
+<div class="section-head"><div><h2 id="hourlyTitle">Next 12 hours · Phnom Penh</h2><p id="hourlyDesc">Temperature, rain probability and wind</p></div></div>
+<div class="card table-wrap"><table class="hourly"><thead><tr><th id="hTime">Time</th><th id="hTemp">Temp</th><th id="hRain">Rain</th><th id="hWind">Wind</th><th id="hWeather">Weather</th></tr></thead><tbody id="hourly"></tbody></table></div>
+
+<footer>
+  <div><b>Before</b> · Cambodia weather dashboard · <span id="footerUpdate">Auto refresh every hour</span></div>
+  <div>Forecast data: Open-Meteo / ECMWF & other global models · Official warnings: MOWRAM</div>
+</footer>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const locations=[
+["Phnom Penh","ភ្នំពេញ",11.5564,104.9282,"Capital"],
+["Banteay Meanchey","បន្ទាយមានជ័យ",13.75,102.99,"Lowlands"],
+["Battambang","បាត់ដំបង",13.10,103.20,"Lowlands"],
+["Kampong Cham","កំពង់ចាម",11.99,105.46,"Lowlands"],
+["Kampong Chhnang","កំពង់ឆ្នាំង",12.25,104.67,"Lowlands"],
+["Kampong Speu","កំពង់ស្ពឺ",11.45,104.52,"Highlands"],
+["Kampong Thom","កំពង់ធំ",12.25,104.89,"Lowlands"],
+["Kampot","កំពត",10.61,104.18,"Coastal"],
+["Kandal","កណ្ដាល",11.36,104.96,"Lowlands"],
+["Kep","កែប",10.48,104.32,"Coastal"],
+["Koh Kong","កោះកុង",11.62,102.98,"Coastal"],
+["Kratie","ក្រចេះ",12.49,106.02,"Highlands"],
+["Mondulkiri","មណ្ឌលគិរី",12.46,107.19,"Highlands"],
+["Oddar Meanchey","ឧត្តរមានជ័យ",14.16,103.92,"Highlands"],
+["Pailin","ប៉ៃលិន",12.85,102.61,"Highlands"],
+["Preah Sihanouk","ព្រះសីហនុ",10.63,103.52,"Coastal"],
+["Preah Vihear","ព្រះវិហារ",13.80,104.98,"Highlands"],
+["Prey Veng","ព្រៃវែង",11.49,105.33,"Lowlands"],
+["Pursat","ពោធិ៍សាត់",12.54,103.92,"Lowlands"],
+["Ratanakiri","រតនគិរី",13.74,106.98,"Highlands"],
+["Siem Reap","សៀមរាប",13.36,103.86,"Lowlands"],
+["Stung Treng","ស្ទឹងត្រែង",13.52,105.97,"Highlands"],
+["Svay Rieng","ស្វាយរៀង",11.09,105.80,"Lowlands"],
+["Takeo","តាកែវ",10.99,104.78,"Lowlands"],
+["Tboung Khmum","ត្បូងឃ្មុំ",11.90,105.72,"Lowlands"]
+];
+const IFS=[["Lowlands","តំបន់ទំនាប"],["Highlands","តំបន់ខ្ពង់រាប"],["Coastal","តំបន់ឆ្នេរ"],["Capital","រាជធានីភ្នំពេញ"]];
+const $=id=>document.getElementById(id);
+let lang=localStorage.getItem("before-lang")||"en", dark=localStorage.getItem("before-theme")==="dark", data=[], map, markers=[];
+const txt={
+en:{subtitle:"Cambodia Weather Intelligence",dark:"Dark",light:"Light",refresh:"Refresh",capital:"PHNOM PENH • LIVE",quick:"Quick conditions",pressure:"Pressure",cloud:"Cloud cover",gust:"Wind gust",updated:"Updated",forecast:"Phnom Penh · 7-day outlook",forecastDesc:"Daily temperature and precipitation probability",regions:"Cambodia regional outlook",regionDesc:"Lowlands, highlands and coastal weather patterns",map:"Cambodia weather map",mapDesc:"Live province markers — click a marker for details",mapNote:"Pastel markers are refreshed hourly. Map © OpenStreetMap contributors.",provinces:"All Cambodia provinces & capital",provinceDesc:"Current conditions across 25 locations",hourly:"Next 12 hours · Phnom Penh",hourlyDesc:"Temperature, rain probability and wind",time:"Time",temp:"Temp",rain:"Rain",wind:"Wind",weather:"Weather",alert:"Weather summary is model-based. Check official MOWRAM advisories for severe-weather warnings.",auto:"Auto refresh every hour"},
+km:{subtitle:"ប្រព័ន្ធព័ត៌មានអាកាសធាតុកម្ពុជា",dark:"ងងឹត",light:"ភ្លឺ",refresh:"ធ្វើបច្ចុប្បន្នភាព",capital:"ភ្នំពេញ • បច្ចុប្បន្ន",quick:"ស្ថានភាពរហ័ស",pressure:"សម្ពាធ",cloud:"ពពក",gust:"ខ្យល់កន្ត្រាក់",updated:"បច្ចុប្បន្នភាព",forecast:"ភ្នំពេញ · ព្យាករណ៍ ៧ ថ្ងៃ",forecastDesc:"សីតុណ្ហភាព និងប្រូបាបភ្លៀងប្រចាំថ្ងៃ",regions:"ទស្សនវិស័យអាកាសធាតុតាមតំបន់",regionDesc:"តំបន់ទំនាប ខ្ពង់រាប និងតំបន់ឆ្នេរ",map:"ផែនទីអាកាសធាតុកម្ពុជា",mapDesc:"សញ្ញាតាមខេត្ត — ចុចដើម្បីមើលព័ត៌មាន",mapNote:"សញ្ញាត្រូវបានធ្វើបច្ចុប្បន្នភាពរៀងរាល់ម៉ោង។ ផែនទី © OpenStreetMap contributors.",provinces:"ខេត្ត និងរាជធានីកម្ពុជាទាំងអស់",provinceDesc:"ស្ថានភាពបច្ចុប្បន្ន ២៥ ទីតាំង",hourly:"១២ ម៉ោងបន្ទាប់ · ភ្នំពេញ",hourlyDesc:"សីតុណ្ហភាព ប្រូបាបភ្លៀង និងខ្យល់",time:"ម៉ោង",temp:"សីតុណ្ហភាព",rain:"ភ្លៀង",wind:"ខ្យល់",weather:"អាកាសធាតុ",alert:"ទិន្នន័យជាការព្យាករណ៍ពីម៉ូដែល។ សូមពិនិត្យសេចក្តីជូនដំណឹងផ្លូវការរបស់ MOWRAM សម្រាប់អាកាសធាតុធ្ងន់ធ្ងរ។",auto:"ធ្វើបច្ចុប្បន្នភាពរៀងរាល់ម៉ោង"}};
+function applyUI(){
+ document.documentElement.lang=lang; document.documentElement.dataset.theme=dark?"dark":"light";
+ const t=txt[lang]; $("subtitle").textContent=t.subtitle;$("themeText").textContent=dark?t.light:t.dark;$("refreshText").textContent=t.refresh;
+ $("capitalLabel").textContent=t.capital;$("quickTitle").textContent=t.quick;$("pressureLabel").textContent=t.pressure;$("cloudLabel").textContent=t.cloud;$("gustLabel").textContent=t.gust;$("updateLabel").textContent=t.updated;
+ $("forecastTitle").textContent=t.forecast;$("forecastDesc").textContent=t.forecastDesc;$("regionTitle").textContent=t.regions;$("regionDesc").textContent=t.regionDesc;$("mapTitle").textContent=t.map;$("mapDesc").textContent=t.mapDesc;$("mapNote").textContent=t.mapNote;
+ $("provinceTitle").textContent=t.provinces;$("provinceDesc").textContent=t.provinceDesc;$("hourlyTitle").textContent=t.hourly;$("hourlyDesc").textContent=t.hourlyDesc;
+ $("hTime").textContent=t.time;$("hTemp").textContent=t.temp;$("hRain").textContent=t.rain;$("hWind").textContent=t.wind;$("hWeather").textContent=t.weather;$("alert").textContent=t.alert;$("footerUpdate").textContent=t.auto;
+}
+function codeInfo(c){
+ const map={0:["☀️","Clear","មេឃស្រឡះ"],1:["🌤️","Mainly clear","មេឃស្រឡះជាច្រើន"],2:["⛅","Partly cloudy","មានពពកមួយផ្នែក"],3:["☁️","Overcast","មានពពកច្រើន"],45:["🌫️","Fog","អ័ព្ទ"],48:["🌫️","Rime fog","អ័ព្ទកក"],51:["🌦️","Light drizzle","ភ្លៀងរលឹមស្រាល"],53:["🌦️","Drizzle","ភ្លៀងរលឹម"],55:["🌧️","Heavy drizzle","ភ្លៀងរលឹមខ្លាំង"],61:["🌦️","Light rain","ភ្លៀងស្រាល"],63:["🌧️","Rain","ភ្លៀង"],65:["🌧️","Heavy rain","ភ្លៀងខ្លាំង"],80:["🌦️","Rain showers","ភ្លៀងជាបន្តបន្ទាប់"],81:["🌧️","Rain showers","ភ្លៀងជាបន្តបន្ទាប់"],82:["⛈️","Heavy showers","ភ្លៀងខ្លាំង"],95:["⛈️","Thunderstorm","ព្យុះផ្គររន្ទះ"],96:["⛈️","Thunderstorm + hail","ព្យុះផ្គររន្ទះ + ព្រិល"],99:["⛈️","Severe thunderstorm","ព្យុះផ្គររន្ទះខ្លាំង"]};return map[c]||["🌤️","Variable","ប្រែប្រួល"];
+}
+function fmtTime(s){return new Date(s).toLocaleTimeString(lang==="km"?"km-KH":"en-US",{hour:"2-digit",minute:"2-digit"});}
+async function load(){
+ $("refresh").classList.add("loading");
+ try{
+  const lat=locations.map(x=>x[2]).join(","), lon=locations.map(x=>x[3]).join(",");
+  const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&timezone=Asia%2FPhnom_Penh&forecast_days=7&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,surface_pressure,cloud_cover,wind_speed_10m,wind_gusts_10m&hourly=temperature_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,sunrise,sunset`;
+  const r=await fetch(url); if(!r.ok) throw new Error("API request failed"); data=await r.json(); if(!Array.isArray(data)) data=[data];
+  render();
+  $("updated").textContent=fmtTime(new Date().toISOString());
+ }catch(e){$("capitalCondition").textContent="Unable to load weather data"; console.error(e)}
+ $("refresh").classList.remove("loading");
+}
+function render(){
+ const pp=data[0], c=pp.current, ci=codeInfo(c.weather_code);
+ $("capitalTemp").textContent=Math.round(c.temperature_2m)+"°";
+ $("capitalCondition").textContent=lang==="km"?ci[2]:ci[1]; $("capitalIcon").textContent=ci[0];
+ $("feels").textContent=`${lang==="km"?"មានអារម្មណ៍":"Feels"} ${Math.round(c.apparent_temperature)}°`;
+ $("humidity").textContent=`${lang==="km"?"សំណើម":"Humidity"} ${Math.round(c.relative_humidity_2m)}%`;
+ $("wind").textContent=`${lang==="km"?"ខ្យល់":"Wind"} ${Math.round(c.wind_speed_10m)} km/h`;
+ $("rain").textContent=`${lang==="km"?"ភ្លៀង":"Rain"} ${pp.daily.precipitation_probability_max[0]}%`;
+ $("pressure").textContent=Math.round(c.surface_pressure)+" hPa"; $("cloud").textContent=Math.round(c.cloud_cover)+"%"; $("gust").textContent=Math.round(c.wind_gusts_10m)+" km/h";
+ renderForecast(pp); renderRegions(); renderProvinces(); renderHourly(pp); renderMap();
+}
+function renderForecast(pp){
+ const d=pp.daily; $("forecast").innerHTML=d.time.map((date,i)=>{
+  const ci=codeInfo(d.weather_code[i]), day=new Date(date+"T12:00:00").toLocaleDateString(lang==="km"?"km-KH":"en-US",{weekday:"short"});
+  return `<div class="card forecast"><div class="day">${day}</div><div class="date">${date}</div><div class="fc-icon">${ci[0]}</div><div><span class="hi">${Math.round(d.temperature_2m_max[i])}°</span> <span class="lo">${Math.round(d.temperature_2m_min[i])}°</span></div><div class="rainbar"><i style="width:${Math.min(100,d.precipitation_probability_max[i])}%"></i></div><div class="small">${d.precipitation_probability_max[i]}% · ${d.precipitation_sum[i].toFixed(1)} mm</div></div>`;
+ }).join("");
+}
+function regionStats(group){
+ const ids=locations.map((x,i)=>x[4]===group?i:-1).filter(i=>i>=0); const ds=ids.map(i=>data[i]).filter(Boolean); if(!ds.length)return null;
+ return {t:Math.round(ds.reduce((a,d)=>a+d.current.temperature_2m,0)/ds.length), rain:Math.round(ds.reduce((a,d)=>a+d.daily.precipitation_probability_max[0],0)/ds.length), code:ds[0].current.weather_code};
+}
+function renderRegions(){
+ $("regions").innerHTML=IFS.map(([en,km])=>{const s=regionStats(en),ci=codeInfo(s.code);return `<div class="card region"><h3>${lang==="km"?km:en}</h3><p>${lang==="km"?"សីតុណ្ហភាពមធ្យម និងឱកាសភ្លៀង":"Average current temperature & rain probability"}</p><div class="rtemp">${s.t}°</div><div>${ci[0]} ${lang==="km"?ci[2]:ci[1]} · ${s.rain}% rain</div></div>`}).join("");
+}
+function renderProvinces(){
+ $("provinces").innerHTML=locations.map((x,i)=>{const d=data[i],ci=codeInfo(d.current.weather_code);return `<div class="card province"><div class="province-top"><span class="province-name">${lang==="km"?x[1]:x[0]}</span><span class="province-temp">${Math.round(d.current.temperature_2m)}°</span></div><div class="province-sub">${ci[0]} ${lang==="km"?ci[2]:ci[1]}</div><div class="province-rain">💧 ${d.daily.precipitation_probability_max[0]}% · ${d.current.relative_humidity_2m}% RH</div></div>`}).join("");
+}
+function renderHourly(pp){
+ const h=pp.hourly, now=new Date(); let idx=h.time.findIndex(t=>new Date(t)>=now); if(idx<0)idx=0;
+ $("hourly").innerHTML=h.time.slice(idx,idx+12).map((t,j)=>{const k=idx+j,ci=codeInfo(h.weather_code[k]);return `<tr><td>${fmtTime(t)}</td><td><b>${Math.round(h.temperature_2m[k])}°</b></td><td>${h.precipitation_probability[k]}% · ${h.precipitation[k].toFixed(1)} mm</td><td>${Math.round(h.wind_speed_10m[k])} km/h</td><td>${ci[0]} ${lang==="km"?ci[2]:ci[1]}</td></tr>`}).join("");
+}
+function renderMap(){
+ if(!map){map=L.map("map",{zoomControl:false}).setView([12.4,104.8],6);L.control.zoom({position:"bottomright"}).addTo(map);L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{attribution:"© OpenStreetMap © CARTO"}).addTo(map);}
+ markers.forEach(m=>m.remove());markers=[];
+ locations.forEach((x,i)=>{const d=data[i],ci=codeInfo(d.current.weather_code), icon=L.divIcon({className:"",html:`<div class="marker">${ci[0]}</div>`,iconSize:[32,32],iconAnchor:[16,16]});const m=L.marker([x[2],x[3]],{icon}).addTo(map).bindPopup(`<b>${lang==="km"?x[1]:x[0]}</b><br>${Math.round(d.current.temperature_2m)}°C · ${lang==="km"?ci[2]:ci[1]}<br>💧 ${d.daily.precipitation_probability_max[0]}%`);markers.push(m);});
+}
+$("lang").value=lang; applyUI();
+$("lang").onchange=e=>{lang=e.target.value;localStorage.setItem("before-lang",lang);applyUI();if(data.length)render()};
+$("theme").onclick=()=>{dark=!dark;localStorage.setItem("before-theme",dark?"dark":"light");applyUI();if(map){setTimeout(()=>map.invalidateSize(),50)}};
+$("refresh").onclick=load;
+load();
+setInterval(load,60*60*1000);
+setInterval(()=>{const next=60*60*1000-(Date.now()% (60*60*1000)); if(next<120000)$("footerUpdate").textContent=(lang==="km"?"បន្ទាប់ក្នុង ":"Next refresh in ")+Math.ceil(next/60000)+(lang==="km"?" នាទី":" min");},30000);
+</script>
+</body>
+</html>
