@@ -1,0 +1,2511 @@
+<!doctype html>
+<html lang="th" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eef7ff">
+  <meta
+    name="description"
+    content="Before Today101 พยากรณ์อากาศประเทศไทยครบ 77 จังหวัด"
+  >
+  <title>Before Today101 | พยากรณ์อากาศประเทศไทย</title>
+
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f9ff;
+      --surface: rgba(255, 255, 255, .9);
+      --surface-solid: #ffffff;
+      --text: #253249;
+      --muted: #69768a;
+      --primary: #707fda;
+      --primary-soft: #e8ebff;
+      --secondary: #55aaa6;
+      --secondary-soft: #dcf6f1;
+      --warning: #e5a055;
+      --border: rgba(79, 101, 139, .16);
+      --shadow: 0 18px 50px rgba(60, 79, 112, .12);
+      --header: rgba(246, 249, 255, .86);
+    }
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #101827;
+      --surface: rgba(27, 38, 56, .92);
+      --surface-solid: #1b2638;
+      --text: #eef5ff;
+      --muted: #aab7ca;
+      --primary: #afb9ff;
+      --primary-soft: #303955;
+      --secondary: #8fd9d1;
+      --secondary-soft: #243f43;
+      --warning: #ffc078;
+      --border: rgba(212, 225, 255, .12);
+      --shadow: 0 20px 60px rgba(0, 0, 0, .27);
+      --header: rgba(16, 24, 39, .86);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(184, 201, 255, .38), transparent 30%),
+        radial-gradient(circle at 100% 4%, rgba(255, 195, 216, .29), transparent 27%),
+        var(--bg);
+      font-family:
+        Inter, "Noto Sans Thai", "Segoe UI", Tahoma, Arial, sans-serif;
+      transition: color .25s, background .25s;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: var(--primary);
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .container {
+      width: min(1220px, calc(100% - 30px));
+      margin-inline: auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 11px 0;
+      background: var(--header);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(17px);
+    }
+
+    .topbar-inner,
+    .brand,
+    .actions,
+    .status-row,
+    .section-heading,
+    .card-head,
+    .metric,
+    .footer-inner {
+      display: flex;
+      align-items: center;
+    }
+
+    .topbar-inner {
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      min-width: 0;
+      gap: 11px;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .logo-frame {
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      flex: 0 0 48px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #bbc6ff, #a5e3dc);
+      border: 1px solid rgba(255, 255, 255, .38);
+      border-radius: 15px;
+      box-shadow: var(--shadow);
+    }
+
+    .logo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #fff;
+    }
+
+    .logo-fallback {
+      display: none;
+      color: #344267;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .brand strong,
+    .brand small {
+      display: block;
+    }
+
+    .brand strong {
+      font-size: 1.04rem;
+    }
+
+    .brand small {
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .actions {
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn {
+      min-height: 40px;
+      padding: 9px 13px;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      box-shadow: 0 5px 18px rgba(63, 84, 120, .06);
+      transition: transform .18s, border-color .18s;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--primary);
+    }
+
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: .55;
+      transform: none;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 72px 0 54px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 83% 17%, rgba(255, 255, 255, .2), transparent 23%),
+        radial-gradient(circle at 15% 110%, rgba(255, 205, 222, .3), transparent 37%),
+        linear-gradient(125deg, #7180d8, #64b4ae);
+      border-radius: 0 0 39px 39px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      bottom: -140px;
+      width: 360px;
+      height: 360px;
+      background: rgba(255, 255, 255, .09);
+      border-radius: 50%;
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 28px;
+      align-items: end;
+    }
+
+    .eyebrow,
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 11px;
+      border-radius: 999px;
+    }
+
+    .eyebrow {
+      background: rgba(255, 255, 255, .17);
+      border: 1px solid rgba(255, 255, 255, .26);
+      backdrop-filter: blur(10px);
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      background: #91f0bd;
+      border-radius: 50%;
+      box-shadow: 0 0 0 5px rgba(145, 240, 189, .17);
+    }
+
+    .status-dot.offline {
+      background: #ffd080;
+      box-shadow: 0 0 0 5px rgba(255, 208, 128, .17);
+    }
+
+    h1 {
+      max-width: 850px;
+      margin: 18px 0 13px;
+      font-size: clamp(2.25rem, 6vw, 5rem);
+      line-height: 1;
+      letter-spacing: -.045em;
+    }
+
+    .hero-description {
+      max-width: 780px;
+      margin: 0;
+      color: rgba(255, 255, 255, .91);
+      font-size: 1.05rem;
+      line-height: 1.8;
+    }
+
+    .national-panel {
+      padding: 22px;
+      background: rgba(255, 255, 255, .16);
+      border: 1px solid rgba(255, 255, 255, .25);
+      border-radius: 25px;
+      backdrop-filter: blur(17px);
+    }
+
+    .national-temp {
+      margin: 10px 0;
+      font-size: 3.15rem;
+      font-weight: 850;
+    }
+
+    .status-row {
+      justify-content: space-between;
+      gap: 10px;
+      padding: 6px 0;
+      color: rgba(255, 255, 255, .9);
+    }
+
+    main {
+      padding: 34px 0 70px;
+    }
+
+    .connection-banner {
+      display: none;
+      margin-bottom: 20px;
+      padding: 14px 17px;
+      color: var(--text);
+      background: color-mix(in srgb, var(--warning) 18%, var(--surface-solid));
+      border: 1px solid color-mix(in srgb, var(--warning) 38%, transparent);
+      border-radius: 16px;
+    }
+
+    .connection-banner.show {
+      display: block;
+    }
+
+    .control-panel,
+    .selected-panel,
+    .forecast-panel,
+    .feed-panel,
+    .source-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 23px;
+      box-shadow: var(--shadow);
+    }
+
+    .control-panel {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr 1fr auto;
+      gap: 12px;
+      padding: 18px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: .88rem;
+      font-weight: 700;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 12px;
+      color: var(--text);
+      background: var(--surface-solid);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 15%, transparent);
+    }
+
+    .update-box {
+      display: grid;
+      align-content: end;
+      min-width: 200px;
+      color: var(--muted);
+      font-size: .87rem;
+      line-height: 1.65;
+    }
+
+    .update-box strong {
+      color: var(--text);
+    }
+
+    .section-heading {
+      justify-content: space-between;
+      gap: 18px;
+      margin: 35px 0 16px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: clamp(1.5rem, 3vw, 2.15rem);
+    }
+
+    .section-heading p {
+      margin: 5px 0 0;
+      color: var(--muted);
+    }
+
+    .count-badge {
+      padding: 8px 12px;
+      color: var(--primary);
+      background: var(--primary-soft);
+      border-radius: 999px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .selected-panel {
+      display: grid;
+      grid-template-columns: .95fr 1.05fr;
+      overflow: hidden;
+    }
+
+    .selected-visual {
+      position: relative;
+      min-height: 310px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: 30px;
+      color: #fff;
+      text-align: center;
+      background:
+        radial-gradient(circle at 70% 20%, rgba(255, 255, 255, .23), transparent 25%),
+        linear-gradient(135deg, #8590dc, #62b5ae);
+    }
+
+    .selected-visual::before,
+    .selected-visual::after {
+      content: "";
+      position: absolute;
+      background: rgba(255, 255, 255, .1);
+      border-radius: 50%;
+    }
+
+    .selected-visual::before {
+      width: 200px;
+      height: 200px;
+      left: -70px;
+      bottom: -75px;
+    }
+
+    .selected-visual::after {
+      width: 120px;
+      height: 120px;
+      right: -20px;
+      top: -25px;
+    }
+
+    .large-weather-icon {
+      position: relative;
+      z-index: 1;
+      font-size: 5.5rem;
+      filter: drop-shadow(0 10px 20px rgba(26, 42, 66, .2));
+    }
+
+    .selected-visual strong,
+    .selected-visual span {
+      position: relative;
+      z-index: 1;
+      display: block;
+    }
+
+    .selected-visual strong {
+      margin-top: 5px;
+      font-size: 1.35rem;
+    }
+
+    .selected-visual span {
+      margin-top: 5px;
+      color: rgba(255, 255, 255, .86);
+    }
+
+    .selected-content {
+      padding: 25px;
+    }
+
+    .selected-title-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: flex-start;
+    }
+
+    .selected-title-row h2 {
+      margin: 0;
+      font-size: clamp(1.65rem, 4vw, 2.5rem);
+    }
+
+    .selected-title-row p {
+      margin: 5px 0 0;
+      color: var(--muted);
+    }
+
+    .current-temperature {
+      color: var(--primary);
+      font-size: clamp(2.3rem, 5vw, 3.7rem);
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .selected-summary {
+      margin: 18px 0;
+      line-height: 1.75;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .metric {
+      justify-content: space-between;
+      gap: 9px;
+      padding: 12px;
+      background: color-mix(in srgb, var(--primary) 8%, transparent);
+      border-radius: 14px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: .86rem;
+    }
+
+    .metric strong {
+      white-space: nowrap;
+    }
+
+    .forecast-panel {
+      padding: 19px;
+    }
+
+    .forecast-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+    }
+
+    .forecast-day {
+      padding: 15px 10px;
+      text-align: center;
+      background: color-mix(in srgb, var(--secondary) 8%, var(--surface-solid));
+      border: 1px solid var(--border);
+      border-radius: 17px;
+    }
+
+    .forecast-day strong,
+    .forecast-day span {
+      display: block;
+    }
+
+    .forecast-day .day-icon {
+      margin: 8px 0;
+      font-size: 2rem;
+    }
+
+    .forecast-day .weather-label {
+      min-height: 38px;
+      margin: 5px 0;
+      color: var(--muted);
+      font-size: .78rem;
+      line-height: 1.4;
+    }
+
+    .forecast-day .rain {
+      margin-top: 7px;
+      color: var(--secondary);
+      font-size: .82rem;
+      font-weight: 800;
+    }
+
+    .province-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .province-card {
+      width: 100%;
+      padding: 16px;
+      color: var(--text);
+      text-align: left;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 19px;
+      box-shadow: 0 10px 30px rgba(60, 79, 112, .08);
+      transition: transform .18s, border-color .18s, box-shadow .18s;
+    }
+
+    .province-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--primary);
+      box-shadow: var(--shadow);
+    }
+
+    .province-card.active {
+      border: 2px solid var(--primary);
+      background: color-mix(in srgb, var(--primary) 7%, var(--surface-solid));
+    }
+
+    .card-head {
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .card-head strong {
+      font-size: 1.04rem;
+    }
+
+    .card-icon {
+      font-size: 2rem;
+    }
+
+    .region-label {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: .79rem;
+    }
+
+    .card-temp {
+      display: block;
+      margin: 12px 0 7px;
+      font-size: 1.8rem;
+      font-weight: 850;
+    }
+
+    .card-condition {
+      display: block;
+      min-height: 39px;
+      color: var(--muted);
+      font-size: .87rem;
+      line-height: 1.45;
+    }
+
+    .mini-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 7px;
+      margin-top: 11px;
+      font-size: .82rem;
+    }
+
+    .mini-row span {
+      padding: 5px 7px;
+      background: var(--primary-soft);
+      border-radius: 9px;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      padding: 45px 20px;
+      color: var(--muted);
+      text-align: center;
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 20px;
+    }
+
+    .feed-panel {
+      overflow: hidden;
+      padding: 19px;
+    }
+
+    .feed-scroll {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 820px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      color: var(--muted);
+      background: color-mix(in srgb, var(--primary) 8%, var(--surface-solid));
+      font-size: .83rem;
+    }
+
+    td {
+      font-size: .9rem;
+    }
+
+    tbody tr:hover {
+      background: color-mix(in srgb, var(--secondary) 7%, transparent);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .source-panel {
+      margin-top: 22px;
+      padding: 19px;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .source-panel strong {
+      color: var(--text);
+    }
+
+    .source-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .source-links a {
+      padding: 7px 10px;
+      text-decoration: none;
+      background: var(--primary-soft);
+      border-radius: 10px;
+    }
+
+    footer {
+      padding: 25px 0;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-inner {
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .loader {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid currentColor;
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spin .75s linear infinite;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 100;
+      max-width: 360px;
+      padding: 13px 16px;
+      color: #fff;
+      background: #29374e;
+      border-radius: 13px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(15px);
+      transition: .25s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 1050px) {
+      .province-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .forecast-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .control-panel {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .update-box {
+        min-width: 0;
+      }
+    }
+
+    @media (max-width: 780px) {
+      .hero-grid,
+      .selected-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .province-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .metrics {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .selected-visual {
+        min-height: 245px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .brand small {
+        display: none;
+      }
+
+      .actions .button-label {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 52px;
+      }
+
+      .control-panel,
+      .province-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .forecast-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .section-heading,
+      .footer-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .selected-title-row {
+        flex-direction: column;
+      }
+
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="#top" aria-label="Before Today101">
+        <span class="logo-frame">
+          <img
+            id="websiteLogo"
+            src="https://drive.google.com/thumbnail?id=1KaSbrNdDTfnUpz2-d9cAV4ctJUxD7_7G&sz=w512"
+            alt="Before Today101"
+          >
+          <span class="logo-fallback" id="logoFallback">BT101</span>
+        </span>
+
+        <span>
+          <strong>Before Today101</strong>
+          <small data-i18n="brandSub">อากาศประเทศไทย 77 จังหวัด</small>
+        </span>
+      </a>
+
+      <nav class="actions" aria-label="เครื่องมือ">
+        <button class="btn" id="refreshButton" type="button">
+          <span id="refreshIcon">↻</span>
+          <span class="button-label" data-i18n="refresh">อัปเดต</span>
+        </button>
+
+        <button class="btn" id="languageButton" type="button">
+          EN
+        </button>
+
+        <button
+          class="btn"
+          id="themeButton"
+          type="button"
+          aria-label="เปลี่ยนธีม"
+        >
+          🌙
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="top">
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="connectionText">ออนไลน์</span>
+        </span>
+
+        <h1 data-i18n="heroTitle">
+          พยากรณ์อากาศประเทศไทย 77 จังหวัด
+        </h1>
+
+        <p class="hero-description" data-i18n="heroDescription">
+          ตรวจสอบสภาพอากาศปัจจุบัน โอกาสเกิดฝน ลม ความชื้น
+          และพยากรณ์ล่วงหน้า 7 วัน พร้อมอัปเดตอัตโนมัติทุกชั่วโมง
+        </p>
+      </div>
+
+      <aside class="national-panel">
+        <span class="pill" data-i18n="nationalOverview">
+          ภาพรวมประเทศไทย
+        </span>
+
+        <div class="national-temp" id="nationalTemperature">
+          --°C
+        </div>
+
+        <div class="status-row">
+          <span data-i18n="highestRain">โอกาสฝนสูงสุด</span>
+          <strong id="nationalRain">--%</strong>
+        </div>
+
+        <div class="status-row">
+          <span data-i18n="strongestWind">ลมแรงสุด</span>
+          <strong id="nationalWind">-- km/h</strong>
+        </div>
+
+        <div class="status-row">
+          <span data-i18n="availableProvinces">จังหวัดที่มีข้อมูล</span>
+          <strong id="availableCount">0/77</strong>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <main class="container">
+    <div class="connection-banner" id="offlineBanner" role="status">
+      <strong data-i18n="offlineTitle">
+        ขณะนี้อินเทอร์เน็ตขาดการเชื่อมต่อ
+      </strong>
+      <span data-i18n="offlineDescription">
+        ระบบกำลังแสดงข้อมูลล่าสุดที่บันทึกไว้
+        และจะอัปเดตเมื่อกลับมาออนไลน์
+      </span>
+    </div>
+
+    <section class="control-panel" aria-label="ตัวเลือกจังหวัด">
+      <div class="field">
+        <label for="provinceSelect" data-i18n="selectProvince">
+          เลือกจังหวัด
+        </label>
+        <select id="provinceSelect"></select>
+      </div>
+
+      <div class="field">
+        <label for="regionSelect" data-i18n="selectRegion">
+          เลือกภูมิภาค
+        </label>
+        <select id="regionSelect"></select>
+      </div>
+
+      <div class="field">
+        <label for="searchInput" data-i18n="searchProvince">
+          ค้นหาจังหวัด
+        </label>
+        <input
+          id="searchInput"
+          type="search"
+          data-i18n-placeholder="searchPlaceholder"
+          placeholder="เช่น กาญจนบุรี หรือ Kanchanaburi"
+        >
+      </div>
+
+      <div class="update-box">
+        <span>
+          <span data-i18n="lastUpdated">อัปเดตล่าสุด</span>:
+          <strong id="lastUpdated">--</strong>
+        </span>
+
+        <span>
+          <span data-i18n="nextUpdate">อัปเดตครั้งถัดไป</span>:
+          <strong id="nextUpdate">--</strong>
+        </span>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-heading">
+        <div>
+          <h2 data-i18n="selectedTitle">จังหวัดที่เลือก</h2>
+          <p data-i18n="selectedSubtitle">
+            ข้อมูลสภาพอากาศปัจจุบันและวันนี้
+          </p>
+        </div>
+      </div>
+
+      <article class="selected-panel" id="selectedPanel"></article>
+    </section>
+
+    <section>
+      <div class="section-heading">
+        <div>
+          <h2 data-i18n="sevenDayTitle">พยากรณ์ล่วงหน้า 7 วัน</h2>
+          <p id="forecastProvinceName"></p>
+        </div>
+      </div>
+
+      <div class="forecast-panel">
+        <div class="forecast-grid" id="forecastGrid"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-heading">
+        <div>
+          <h2 data-i18n="provinceTitle">พยากรณ์รายจังหวัด</h2>
+          <p data-i18n="provinceSubtitle">
+            เลือกจังหวัดเพื่อดูรายละเอียดและพยากรณ์ล่วงหน้า
+          </p>
+        </div>
+
+        <span class="count-badge" id="resultCount">77/77</span>
+      </div>
+
+      <div class="province-grid" id="provinceGrid"></div>
+    </section>
+
+    <section>
+      <div class="section-heading">
+        <div>
+          <h2 data-i18n="continuousTitle">
+            ข้อมูลอากาศแบบต่อเนื่อง
+          </h2>
+          <p data-i18n="continuousSubtitle">
+            สรุปข้อมูลล่าสุดของจังหวัดที่แสดงอยู่
+          </p>
+        </div>
+      </div>
+
+      <div class="feed-panel">
+        <div class="feed-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th data-i18n="province">จังหวัด</th>
+                <th data-i18n="region">ภูมิภาค</th>
+                <th data-i18n="condition">สภาพอากาศ</th>
+                <th data-i18n="temperature">อุณหภูมิ</th>
+                <th data-i18n="rain">โอกาสฝน</th>
+                <th data-i18n="humidity">ความชื้น</th>
+                <th data-i18n="wind">ความเร็วลม</th>
+              </tr>
+            </thead>
+            <tbody id="feedBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="source-panel">
+      <strong data-i18n="informationNote">
+        แหล่งข้อมูลและข้อควรทราบ:
+      </strong>
+
+      <span data-i18n="informationDescription">
+        ข้อมูลดึงจาก Open-Meteo ตามพิกัดตัวเมืองของแต่ละจังหวัด
+        จึงอาจแตกต่างจากสภาพอากาศในอำเภออื่น
+        ควรตรวจสอบประกาศจากกรมอุตุนิยมวิทยาก่อนเดินทาง
+        หรือทำกิจกรรมทางทะเล
+      </span>
+
+      <div class="source-links">
+        <a
+          href="https://www.tmd.go.th/weather/weatherthailand"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          กรมอุตุนิยมวิทยา
+        </a>
+
+        <a
+          href="https://www.tmd.go.th/forecast/sevenday"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          พยากรณ์ 7 วัน
+        </a>
+
+        <a
+          href="https://open-meteo.com/en/docs"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Open-Meteo API
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>
+        © <span id="year"></span> Before Today101
+      </span>
+
+      <span data-i18n="autoUpdateFooter">
+        อัปเดตอัตโนมัติทุก 1 ชั่วโมงเมื่อเชื่อมต่ออินเทอร์เน็ต
+      </span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    "use strict";
+
+    const HOUR = 60 * 60 * 1000;
+    const CACHE_KEY = "before-today101-weather-v3";
+    const LANGUAGE_KEY = "before-today101-language";
+    const THEME_KEY = "before-today101-theme";
+    const PROVINCE_KEY = "before-today101-province";
+
+    const regions = {
+      all: {
+        th: "ทุกภูมิภาค",
+        en: "All regions"
+      },
+      west: {
+        th: "ภาคตะวันตก",
+        en: "Western Thailand"
+      },
+      north: {
+        th: "ภาคเหนือ",
+        en: "Northern Thailand"
+      },
+      northeast: {
+        th: "ภาคตะวันออกเฉียงเหนือ",
+        en: "Northeastern Thailand"
+      },
+      central: {
+        th: "ภาคกลาง",
+        en: "Central Thailand"
+      },
+      east: {
+        th: "ภาคตะวันออก",
+        en: "Eastern Thailand"
+      },
+      south: {
+        th: "ภาคใต้",
+        en: "Southern Thailand"
+      }
+    };
+
+    const provinces = [
+      { id:"kanchanaburi", th:"กาญจนบุรี", en:"Kanchanaburi", r:"west", lat:14.0228, lon:99.5328 },
+      { id:"ratchaburi", th:"ราชบุรี", en:"Ratchaburi", r:"west", lat:13.5283, lon:99.8134 },
+      { id:"suphan-buri", th:"สุพรรณบุรี", en:"Suphan Buri", r:"west", lat:14.4745, lon:100.1177 },
+      { id:"phetchaburi", th:"เพชรบุรี", en:"Phetchaburi", r:"west", lat:13.1119, lon:99.9396 },
+      { id:"prachuap-khiri-khan", th:"ประจวบคีรีขันธ์", en:"Prachuap Khiri Khan", r:"west", lat:11.8124, lon:99.7973 },
+
+      { id:"chiang-mai", th:"เชียงใหม่", en:"Chiang Mai", r:"north", lat:18.7883, lon:98.9853 },
+      { id:"chiang-rai", th:"เชียงราย", en:"Chiang Rai", r:"north", lat:19.9105, lon:99.8406 },
+      { id:"lampang", th:"ลำปาง", en:"Lampang", r:"north", lat:18.2888, lon:99.4909 },
+      { id:"lamphun", th:"ลำพูน", en:"Lamphun", r:"north", lat:18.5745, lon:99.0087 },
+      { id:"mae-hong-son", th:"แม่ฮ่องสอน", en:"Mae Hong Son", r:"north", lat:19.3003, lon:97.9685 },
+      { id:"nan", th:"น่าน", en:"Nan", r:"north", lat:18.7756, lon:100.7730 },
+      { id:"phayao", th:"พะเยา", en:"Phayao", r:"north", lat:19.1665, lon:99.9019 },
+      { id:"phrae", th:"แพร่", en:"Phrae", r:"north", lat:18.1446, lon:100.1403 },
+      { id:"uttaradit", th:"อุตรดิตถ์", en:"Uttaradit", r:"north", lat:17.6201, lon:100.0993 },
+      { id:"tak", th:"ตาก", en:"Tak", r:"north", lat:16.8840, lon:99.1258 },
+      { id:"sukhothai", th:"สุโขทัย", en:"Sukhothai", r:"north", lat:17.0056, lon:99.8264 },
+      { id:"phitsanulok", th:"พิษณุโลก", en:"Phitsanulok", r:"north", lat:16.8211, lon:100.2659 },
+      { id:"phichit", th:"พิจิตร", en:"Phichit", r:"north", lat:16.4429, lon:100.3496 },
+      { id:"phetchabun", th:"เพชรบูรณ์", en:"Phetchabun", r:"north", lat:16.4190, lon:101.1606 },
+      { id:"kamphaeng-phet", th:"กำแพงเพชร", en:"Kamphaeng Phet", r:"north", lat:16.4828, lon:99.5227 },
+      { id:"nakhon-sawan", th:"นครสวรรค์", en:"Nakhon Sawan", r:"north", lat:15.7047, lon:100.1372 },
+      { id:"uthai-thani", th:"อุทัยธานี", en:"Uthai Thani", r:"north", lat:15.3835, lon:100.0246 },
+
+      { id:"kalasin", th:"กาฬสินธุ์", en:"Kalasin", r:"northeast", lat:16.4322, lon:103.5066 },
+      { id:"khon-kaen", th:"ขอนแก่น", en:"Khon Kaen", r:"northeast", lat:16.4419, lon:102.8359 },
+      { id:"chaiyaphum", th:"ชัยภูมิ", en:"Chaiyaphum", r:"northeast", lat:15.8068, lon:102.0315 },
+      { id:"nakhon-phanom", th:"นครพนม", en:"Nakhon Phanom", r:"northeast", lat:17.3920, lon:104.7696 },
+      { id:"nakhon-ratchasima", th:"นครราชสีมา", en:"Nakhon Ratchasima", r:"northeast", lat:14.9799, lon:102.0977 },
+      { id:"bueng-kan", th:"บึงกาฬ", en:"Bueng Kan", r:"northeast", lat:18.3609, lon:103.6464 },
+      { id:"buriram", th:"บุรีรัมย์", en:"Buriram", r:"northeast", lat:14.9930, lon:103.1029 },
+      { id:"maha-sarakham", th:"มหาสารคาม", en:"Maha Sarakham", r:"northeast", lat:16.1851, lon:103.3026 },
+      { id:"mukdahan", th:"มุกดาหาร", en:"Mukdahan", r:"northeast", lat:16.5453, lon:104.7235 },
+      { id:"yasothon", th:"ยโสธร", en:"Yasothon", r:"northeast", lat:15.7926, lon:104.1453 },
+      { id:"roi-et", th:"ร้อยเอ็ด", en:"Roi Et", r:"northeast", lat:16.0538, lon:103.6520 },
+      { id:"loei", th:"เลย", en:"Loei", r:"northeast", lat:17.4860, lon:101.7223 },
+      { id:"sisaket", th:"ศรีสะเกษ", en:"Sisaket", r:"northeast", lat:15.1186, lon:104.3220 },
+      { id:"sakon-nakhon", th:"สกลนคร", en:"Sakon Nakhon", r:"northeast", lat:17.1546, lon:104.1348 },
+      { id:"surin", th:"สุรินทร์", en:"Surin", r:"northeast", lat:14.8829, lon:103.4937 },
+      { id:"nong-khai", th:"หนองคาย", en:"Nong Khai", r:"northeast", lat:17.8783, lon:102.7413 },
+      { id:"nong-bua-lamphu", th:"หนองบัวลำภู", en:"Nong Bua Lamphu", r:"northeast", lat:17.2041, lon:102.4407 },
+      { id:"amnat-charoen", th:"อำนาจเจริญ", en:"Amnat Charoen", r:"northeast", lat:15.8657, lon:104.6258 },
+      { id:"udon-thani", th:"อุดรธานี", en:"Udon Thani", r:"northeast", lat:17.4138, lon:102.7870 },
+      { id:"ubon-ratchathani", th:"อุบลราชธานี", en:"Ubon Ratchathani", r:"northeast", lat:15.2448, lon:104.8473 },
+
+      { id:"bangkok", th:"กรุงเทพมหานคร", en:"Bangkok", r:"central", lat:13.7563, lon:100.5018 },
+      { id:"chai-nat", th:"ชัยนาท", en:"Chai Nat", r:"central", lat:15.1852, lon:100.1251 },
+      { id:"nakhon-nayok", th:"นครนายก", en:"Nakhon Nayok", r:"central", lat:14.2069, lon:101.2131 },
+      { id:"nakhon-pathom", th:"นครปฐม", en:"Nakhon Pathom", r:"central", lat:13.8199, lon:100.0622 },
+      { id:"nonthaburi", th:"นนทบุรี", en:"Nonthaburi", r:"central", lat:13.8621, lon:100.5144 },
+      { id:"pathum-thani", th:"ปทุมธานี", en:"Pathum Thani", r:"central", lat:14.0208, lon:100.5250 },
+      { id:"ayutthaya", th:"พระนครศรีอยุธยา", en:"Phra Nakhon Si Ayutthaya", r:"central", lat:14.3532, lon:100.5689 },
+      { id:"lopburi", th:"ลพบุรี", en:"Lopburi", r:"central", lat:14.7995, lon:100.6534 },
+      { id:"samut-prakan", th:"สมุทรปราการ", en:"Samut Prakan", r:"central", lat:13.5991, lon:100.5998 },
+      { id:"samut-songkhram", th:"สมุทรสงคราม", en:"Samut Songkhram", r:"central", lat:13.4098, lon:100.0023 },
+      { id:"samut-sakhon", th:"สมุทรสาคร", en:"Samut Sakhon", r:"central", lat:13.5475, lon:100.2744 },
+      { id:"saraburi", th:"สระบุรี", en:"Saraburi", r:"central", lat:14.5289, lon:100.9101 },
+      { id:"sing-buri", th:"สิงห์บุรี", en:"Sing Buri", r:"central", lat:14.8936, lon:100.3967 },
+      { id:"ang-thong", th:"อ่างทอง", en:"Ang Thong", r:"central", lat:14.5896, lon:100.4551 },
+
+      { id:"chachoengsao", th:"ฉะเชิงเทรา", en:"Chachoengsao", r:"east", lat:13.6904, lon:101.0779 },
+      { id:"chanthaburi", th:"จันทบุรี", en:"Chanthaburi", r:"east", lat:12.6113, lon:102.1038 },
+      { id:"chonburi", th:"ชลบุรี", en:"Chonburi", r:"east", lat:13.3611, lon:100.9847 },
+      { id:"trat", th:"ตราด", en:"Trat", r:"east", lat:12.2428, lon:102.5175 },
+      { id:"prachinburi", th:"ปราจีนบุรี", en:"Prachinburi", r:"east", lat:14.0509, lon:101.3729 },
+      { id:"rayong", th:"ระยอง", en:"Rayong", r:"east", lat:12.6814, lon:101.2816 },
+      { id:"sa-kaeo", th:"สระแก้ว", en:"Sa Kaeo", r:"east", lat:13.8240, lon:102.0646 },
+
+      { id:"krabi", th:"กระบี่", en:"Krabi", r:"south", lat:8.0863, lon:98.9063 },
+      { id:"chumphon", th:"ชุมพร", en:"Chumphon", r:"south", lat:10.4930, lon:99.1800 },
+      { id:"trang", th:"ตรัง", en:"Trang", r:"south", lat:7.5594, lon:99.6114 },
+      { id:"nakhon-si-thammarat", th:"นครศรีธรรมราช", en:"Nakhon Si Thammarat", r:"south", lat:8.4304, lon:99.9631 },
+      { id:"narathiwat", th:"นราธิวาส", en:"Narathiwat", r:"south", lat:6.4255, lon:101.8253 },
+      { id:"pattani", th:"ปัตตานี", en:"Pattani", r:"south", lat:6.8695, lon:101.2505 },
+      { id:"phang-nga", th:"พังงา", en:"Phang Nga", r:"south", lat:8.4501, lon:98.5255 },
+      { id:"phatthalung", th:"พัทลุง", en:"Phatthalung", r:"south", lat:7.6167, lon:100.0740 },
+      { id:"phuket", th:"ภูเก็ต", en:"Phuket", r:"south", lat:7.8804, lon:98.3923 },
+      { id:"ranong", th:"ระนอง", en:"Ranong", r:"south", lat:9.9529, lon:98.6085 },
+      { id:"satun", th:"สตูล", en:"Satun", r:"south", lat:6.6238, lon:100.0674 },
+      { id:"songkhla", th:"สงขลา", en:"Songkhla", r:"south", lat:7.1898, lon:100.5954 },
+      { id:"surat-thani", th:"สุราษฎร์ธานี", en:"Surat Thani", r:"south", lat:9.1382, lon:99.3217 },
+      { id:"yala", th:"ยะลา", en:"Yala", r:"south", lat:6.5411, lon:101.2804 }
+    ];
+
+    const dictionary = {
+      th: {
+        brandSub: "อากาศประเทศไทย 77 จังหวัด",
+        refresh: "อัปเดต",
+        heroTitle: "พยากรณ์อากาศประเทศไทย 77 จังหวัด",
+        heroDescription:
+          "ตรวจสอบสภาพอากาศปัจจุบัน โอกาสเกิดฝน ลม ความชื้น และพยากรณ์ล่วงหน้า 7 วัน พร้อมอัปเดตอัตโนมัติทุกชั่วโมง",
+        nationalOverview: "ภาพรวมประเทศไทย",
+        highestRain: "โอกาสฝนสูงสุด",
+        strongestWind: "ลมแรงสุด",
+        availableProvinces: "จังหวัดที่มีข้อมูล",
+        offlineTitle: "ขณะนี้อินเทอร์เน็ตขาดการเชื่อมต่อ ",
+        offlineDescription:
+          "ระบบกำลังแสดงข้อมูลล่าสุดที่บันทึกไว้ และจะอัปเดตเมื่อกลับมาออนไลน์",
+        selectProvince: "เลือกจังหวัด",
+        selectRegion: "เลือกภูมิภาค",
+        searchProvince: "ค้นหาจังหวัด",
+        searchPlaceholder: "เช่น กาญจนบุรี หรือ Kanchanaburi",
+        lastUpdated: "อัปเดตล่าสุด",
+        nextUpdate: "อัปเดตครั้งถัดไป",
+        selectedTitle: "จังหวัดที่เลือก",
+        selectedSubtitle: "ข้อมูลสภาพอากาศปัจจุบันและวันนี้",
+        sevenDayTitle: "พยากรณ์ล่วงหน้า 7 วัน",
+        provinceTitle: "พยากรณ์รายจังหวัด",
+        provinceSubtitle:
+          "เลือกจังหวัดเพื่อดูรายละเอียดและพยากรณ์ล่วงหน้า",
+        continuousTitle: "ข้อมูลอากาศแบบต่อเนื่อง",
+        continuousSubtitle: "สรุปข้อมูลล่าสุดของจังหวัดที่แสดงอยู่",
+        province: "จังหวัด",
+        region: "ภูมิภาค",
+        condition: "สภาพอากาศ",
+        temperature: "อุณหภูมิ",
+        rain: "โอกาสฝน",
+        humidity: "ความชื้น",
+        wind: "ความเร็วลม",
+        feelsLike: "รู้สึกเหมือน",
+        minMax: "ต่ำสุด/สูงสุด",
+        precipitation: "ปริมาณฝน",
+        informationNote: "แหล่งข้อมูลและข้อควรทราบ: ",
+        informationDescription:
+          "ข้อมูลดึงจาก Open-Meteo ตามพิกัดตัวเมืองของแต่ละจังหวัด จึงอาจแตกต่างจากสภาพอากาศในอำเภออื่น ควรตรวจสอบประกาศจากกรมอุตุนิยมวิทยาก่อนเดินทางหรือทำกิจกรรมทางทะเล",
+        autoUpdateFooter:
+          "อัปเดตอัตโนมัติทุก 1 ชั่วโมงเมื่อเชื่อมต่ออินเทอร์เน็ต",
+        online: "ออนไลน์",
+        offline: "ออฟไลน์ — แสดงข้อมูลที่บันทึกไว้",
+        loading: "กำลังโหลดข้อมูล",
+        unavailable: "ยังไม่มีข้อมูล",
+        noResults: "ไม่พบจังหวัดที่ตรงกับการค้นหา",
+        updated: "อัปเดตข้อมูลเรียบร้อยแล้ว",
+        updateFailed: "ไม่สามารถอัปเดตข้อมูลได้",
+        offlineCannotUpdate:
+          "ไม่สามารถอัปเดตได้ เนื่องจากออฟไลน์",
+        today: "วันนี้",
+        summary: (name, condition, low, high, rain) =>
+          `${name} มีสภาพอากาศ${condition} อุณหภูมิต่ำสุด ${low}°C สูงสุด ${high}°C และมีโอกาสเกิดฝนสูงสุดประมาณ ${rain}%`,
+        weather: {
+          clear: "ท้องฟ้าแจ่มใส",
+          partly: "มีเมฆบางส่วน",
+          cloudy: "เมฆมาก",
+          fog: "มีหมอก",
+          drizzle: "ฝนละออง",
+          rain: "มีฝน",
+          snow: "หิมะ",
+          showers: "ฝนตกเป็นแห่ง ๆ",
+          storm: "พายุฝนฟ้าคะนอง",
+          unknown: "สภาพอากาศไม่แน่นอน"
+        }
+      },
+
+      en: {
+        brandSub: "Weather for all 77 Thai provinces",
+        refresh: "Refresh",
+        heroTitle: "Weather Forecast for Thailand's 77 Provinces",
+        heroDescription:
+          "View current conditions, rain probability, wind, humidity and a seven-day forecast with automatic hourly updates.",
+        nationalOverview: "Thailand overview",
+        highestRain: "Highest rain chance",
+        strongestWind: "Strongest wind",
+        availableProvinces: "Provinces available",
+        offlineTitle: "Internet connection is currently unavailable. ",
+        offlineDescription:
+          "The latest cached information is displayed and will update when the connection returns.",
+        selectProvince: "Select a province",
+        selectRegion: "Select a region",
+        searchProvince: "Search provinces",
+        searchPlaceholder: "For example, Kanchanaburi",
+        lastUpdated: "Last updated",
+        nextUpdate: "Next update",
+        selectedTitle: "Selected province",
+        selectedSubtitle: "Current and today's weather information",
+        sevenDayTitle: "Seven-day forecast",
+        provinceTitle: "Provincial forecasts",
+        provinceSubtitle:
+          "Select a province to see details and the extended forecast",
+        continuousTitle: "Continuous weather information",
+        continuousSubtitle:
+          "Latest summary for the displayed provinces",
+        province: "Province",
+        region: "Region",
+        condition: "Condition",
+        temperature: "Temperature",
+        rain: "Rain chance",
+        humidity: "Humidity",
+        wind: "Wind speed",
+        feelsLike: "Feels like",
+        minMax: "Low/High",
+        precipitation: "Precipitation",
+        informationNote: "Sources and important information: ",
+        informationDescription:
+          "Data is retrieved from Open-Meteo using coordinates near each provincial city. Conditions may differ in other districts. Check official Thai Meteorological Department warnings before travel or marine activities.",
+        autoUpdateFooter:
+          "Automatically updates every hour while connected to the internet",
+        online: "Online",
+        offline: "Offline — showing cached information",
+        loading: "Loading information",
+        unavailable: "Information unavailable",
+        noResults: "No provinces matched your search",
+        updated: "Weather information updated",
+        updateFailed: "Weather update failed",
+        offlineCannotUpdate: "Cannot update while offline",
+        today: "Today",
+        summary: (name, condition, low, high, rain) =>
+          `${name} is experiencing ${condition}, with a low of ${low}°C, a high of ${high}°C and a maximum rain probability of about ${rain}%.`,
+        weather: {
+          clear: "clear skies",
+          partly: "partly cloudy conditions",
+          cloudy: "cloudy conditions",
+          fog: "fog",
+          drizzle: "drizzle",
+          rain: "rain",
+          snow: "snow",
+          showers: "rain showers",
+          storm: "thunderstorms",
+          unknown: "uncertain conditions"
+        }
+      }
+    };
+
+    const state = {
+      language: localStorage.getItem(LANGUAGE_KEY) || "th",
+      theme:
+        localStorage.getItem(THEME_KEY) ||
+        (
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light"
+        ),
+      selectedProvince:
+        localStorage.getItem(PROVINCE_KEY) || "kanchanaburi",
+      selectedRegion: "all",
+      search: "",
+      weather: {},
+      lastUpdated: 0,
+      fetching: false
+    };
+
+    const provinceSelect =
+      document.getElementById("provinceSelect");
+
+    const regionSelect =
+      document.getElementById("regionSelect");
+
+    const searchInput =
+      document.getElementById("searchInput");
+
+    const provinceGrid =
+      document.getElementById("provinceGrid");
+
+    const selectedPanel =
+      document.getElementById("selectedPanel");
+
+    const forecastGrid =
+      document.getElementById("forecastGrid");
+
+    const feedBody =
+      document.getElementById("feedBody");
+
+    const toast =
+      document.getElementById("toast");
+
+    function text(key) {
+      return dictionary[state.language][key] ?? key;
+    }
+
+    function provinceName(province) {
+      return province[state.language];
+    }
+
+    function regionName(regionId) {
+      return regions[regionId][state.language];
+    }
+
+    function findProvince(id) {
+      return (
+        provinces.find(province => province.id === id) ||
+        provinces[0]
+      );
+    }
+
+    function number(value, digits = 0) {
+      if (!Number.isFinite(Number(value))) {
+        return "--";
+      }
+
+      return new Intl.NumberFormat(
+        state.language === "th" ? "th-TH" : "en-US",
+        {
+          maximumFractionDigits: digits
+        }
+      ).format(Number(value));
+    }
+
+    function formatDateTime(timestamp) {
+      if (!timestamp) {
+        return "--";
+      }
+
+      return new Intl.DateTimeFormat(
+        state.language === "th" ? "th-TH" : "en-GB",
+        {
+          dateStyle: "medium",
+          timeStyle: "short",
+          timeZone: "Asia/Bangkok"
+        }
+      ).format(new Date(timestamp));
+    }
+
+    function formatForecastDate(dateString, index) {
+      if (index === 0) {
+        return text("today");
+      }
+
+      return new Intl.DateTimeFormat(
+        state.language === "th" ? "th-TH" : "en-GB",
+        {
+          weekday: "short",
+          day: "numeric",
+          month: "short",
+          timeZone: "Asia/Bangkok"
+        }
+      ).format(new Date(`${dateString}T12:00:00+07:00`));
+    }
+
+    function weatherInformation(code) {
+      const labels = dictionary[state.language].weather;
+
+      if (code === 0) {
+        return { label: labels.clear, icon: "☀️" };
+      }
+
+      if ([1, 2].includes(code)) {
+        return { label: labels.partly, icon: "⛅" };
+      }
+
+      if (code === 3) {
+        return { label: labels.cloudy, icon: "☁️" };
+      }
+
+      if ([45, 48].includes(code)) {
+        return { label: labels.fog, icon: "🌫️" };
+      }
+
+      if ([51, 53, 55, 56, 57].includes(code)) {
+        return { label: labels.drizzle, icon: "🌦️" };
+      }
+
+      if ([61, 63, 65, 66, 67].includes(code)) {
+        return { label: labels.rain, icon: "🌧️" };
+      }
+
+      if ([71, 73, 75, 77].includes(code)) {
+        return { label: labels.snow, icon: "❄️" };
+      }
+
+      if ([80, 81, 82].includes(code)) {
+        return { label: labels.showers, icon: "🌦️" };
+      }
+
+      if ([95, 96, 99].includes(code)) {
+        return { label: labels.storm, icon: "⛈️" };
+      }
+
+      return {
+        label: labels.unknown,
+        icon: "🌤️"
+      };
+    }
+
+    function normaliseWeather(result) {
+      const daily = result.daily || {};
+      const current = result.current || {};
+      const dates = daily.time || [];
+
+      return {
+        current: {
+          temperature: current.temperature_2m,
+          feels: current.apparent_temperature,
+          humidity: current.relative_humidity_2m,
+          wind: current.wind_speed_10m,
+          precipitation: current.precipitation,
+          code: current.weather_code
+        },
+
+        daily: dates.map((date, index) => ({
+          date,
+          code: daily.weather_code?.[index],
+          max: daily.temperature_2m_max?.[index],
+          min: daily.temperature_2m_min?.[index],
+          rain:
+            daily.precipitation_probability_max?.[index] ?? 0,
+          precipitation:
+            daily.precipitation_sum?.[index] ?? 0,
+          wind:
+            daily.wind_speed_10m_max?.[index] ?? 0
+        }))
+      };
+    }
+
+    function createBatches(items, size = 20) {
+      const batches = [];
+
+      for (
+        let index = 0;
+        index < items.length;
+        index += size
+      ) {
+        batches.push(items.slice(index, index + size));
+      }
+
+      return batches;
+    }
+
+    async function fetchBatch(batch) {
+      const parameters = new URLSearchParams({
+        latitude:
+          batch.map(item => item.lat).join(","),
+        longitude:
+          batch.map(item => item.lon).join(","),
+        timezone: "Asia/Bangkok",
+        forecast_days: "7",
+        current: [
+          "temperature_2m",
+          "relative_humidity_2m",
+          "apparent_temperature",
+          "precipitation",
+          "weather_code",
+          "wind_speed_10m"
+        ].join(","),
+        daily: [
+          "weather_code",
+          "temperature_2m_max",
+          "temperature_2m_min",
+          "precipitation_sum",
+          "precipitation_probability_max",
+          "wind_speed_10m_max"
+        ].join(",")
+      });
+
+      const response = await fetch(
+        `https://api.open-meteo.com/v1/forecast?${parameters.toString()}`,
+        {
+          cache: "no-store"
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Weather API error: ${response.status}`
+        );
+      }
+
+      const payload = await response.json();
+      const results =
+        Array.isArray(payload) ? payload : [payload];
+
+      const weather = {};
+
+      results.forEach((result, index) => {
+        const province = batch[index];
+
+        if (province) {
+          weather[province.id] =
+            normaliseWeather(result);
+        }
+      });
+
+      return weather;
+    }
+
+    async function refreshWeather(showMessage = true) {
+      if (state.fetching) {
+        return;
+      }
+
+      if (!navigator.onLine) {
+        updateConnectionStatus();
+        showToast(text("offlineCannotUpdate"));
+        return;
+      }
+
+      state.fetching = true;
+      setRefreshLoading(true);
+
+      try {
+        const batches =
+          createBatches(provinces, 20);
+
+        const results = await Promise.allSettled(
+          batches.map(batch => fetchBatch(batch))
+        );
+
+        let successfulBatches = 0;
+        const updatedWeather = {
+          ...state.weather
+        };
+
+        results.forEach(result => {
+          if (result.status === "fulfilled") {
+            Object.assign(
+              updatedWeather,
+              result.value
+            );
+
+            successfulBatches += 1;
+          } else {
+            console.error(result.reason);
+          }
+        });
+
+        if (successfulBatches === 0) {
+          throw new Error(
+            "All weather requests failed"
+          );
+        }
+
+        state.weather = updatedWeather;
+        state.lastUpdated = Date.now();
+
+        saveCache();
+        renderAll();
+
+        if (showMessage) {
+          showToast(text("updated"));
+        }
+      } catch (error) {
+        console.error(error);
+        showToast(text("updateFailed"));
+      } finally {
+        state.fetching = false;
+        setRefreshLoading(false);
+      }
+    }
+
+    function saveCache() {
+      try {
+        localStorage.setItem(
+          CACHE_KEY,
+          JSON.stringify({
+            timestamp: state.lastUpdated,
+            weather: state.weather
+          })
+        );
+      } catch (error) {
+        console.warn(
+          "Unable to save weather cache",
+          error
+        );
+      }
+    }
+
+    function loadCache() {
+      try {
+        const cached = JSON.parse(
+          localStorage.getItem(CACHE_KEY) || "null"
+        );
+
+        if (cached?.weather) {
+          state.weather = cached.weather;
+          state.lastUpdated =
+            Number(cached.timestamp) || 0;
+        }
+      } catch (error) {
+        console.warn(
+          "Unable to read weather cache",
+          error
+        );
+      }
+    }
+
+    function filteredProvinces() {
+      const query =
+        state.search.trim().toLocaleLowerCase();
+
+      return provinces.filter(province => {
+        const regionMatches =
+          state.selectedRegion === "all" ||
+          province.r === state.selectedRegion;
+
+        const searchMatches =
+          !query ||
+          province.th
+            .toLocaleLowerCase()
+            .includes(query) ||
+          province.en
+            .toLocaleLowerCase()
+            .includes(query);
+
+        return regionMatches && searchMatches;
+      });
+    }
+
+    function renderProvinceOptions() {
+      const sorted = [...provinces].sort(
+        (first, second) =>
+          provinceName(first).localeCompare(
+            provinceName(second),
+            state.language === "th" ? "th" : "en"
+          )
+      );
+
+      provinceSelect.innerHTML = sorted
+        .map(province => `
+          <option
+            value="${province.id}"
+            ${
+              province.id === state.selectedProvince
+                ? "selected"
+                : ""
+            }
+          >
+            ${provinceName(province)}
+          </option>
+        `)
+        .join("");
+
+      regionSelect.innerHTML =
+        Object.keys(regions)
+          .map(regionId => `
+            <option
+              value="${regionId}"
+              ${
+                regionId === state.selectedRegion
+                  ? "selected"
+                  : ""
+              }
+            >
+              ${regionName(regionId)}
+            </option>
+          `)
+          .join("");
+    }
+
+    function renderNationalOverview() {
+      const available = provinces
+        .map(province => state.weather[province.id])
+        .filter(item =>
+          Number.isFinite(
+            Number(item?.current?.temperature)
+          )
+        );
+
+      document.getElementById(
+        "availableCount"
+      ).textContent = `${available.length}/77`;
+
+      if (!available.length) {
+        document.getElementById(
+          "nationalTemperature"
+        ).textContent = "--°C";
+
+        document.getElementById(
+          "nationalRain"
+        ).textContent = "--%";
+
+        document.getElementById(
+          "nationalWind"
+        ).textContent = "-- km/h";
+
+        return;
+      }
+
+      const averageTemperature =
+        available.reduce(
+          (total, item) =>
+            total +
+            Number(item.current.temperature),
+          0
+        ) / available.length;
+
+      const highestRain = Math.max(
+        ...available.map(
+          item =>
+            Number(item.daily?.[0]?.rain) || 0
+        )
+      );
+
+      const strongestWind = Math.max(
+        ...available.map(
+          item =>
+            Number(item.current?.wind) || 0
+        )
+      );
+
+      document.getElementById(
+        "nationalTemperature"
+      ).textContent =
+        `${number(averageTemperature, 1)}°C`;
+
+      document.getElementById(
+        "nationalRain"
+      ).textContent =
+        `${number(highestRain)}%`;
+
+      document.getElementById(
+        "nationalWind"
+      ).textContent =
+        `${number(strongestWind, 1)} km/h`;
+    }
+
+    function renderSelectedProvince() {
+      const province =
+        findProvince(state.selectedProvince);
+
+      const weather =
+        state.weather[province.id];
+
+      const current = weather?.current;
+      const today = weather?.daily?.[0];
+
+      const info = weatherInformation(
+        current?.code ?? today?.code
+      );
+
+      document.getElementById(
+        "forecastProvinceName"
+      ).textContent =
+        `${provinceName(province)} · ${regionName(province.r)}`;
+
+      if (!weather) {
+        selectedPanel.innerHTML = `
+          <div class="selected-visual">
+            <div>
+              <div class="large-weather-icon">🌤️</div>
+              <strong>${provinceName(province)}</strong>
+              <span>${text("loading")}</span>
+            </div>
+          </div>
+
+          <div class="selected-content">
+            <h2>${provinceName(province)}</h2>
+            <p>${text("unavailable")}</p>
+          </div>
+        `;
+
+        forecastGrid.innerHTML =
+          Array.from({ length: 7 }, () => `
+            <article class="forecast-day">
+              <span>--</span>
+              <span class="day-icon">🌤️</span>
+              <span>--° / --°</span>
+            </article>
+          `).join("");
+
+        return;
+      }
+
+      const summary =
+        dictionary[state.language].summary(
+          provinceName(province),
+          info.label,
+          number(today?.min),
+          number(today?.max),
+          number(today?.rain)
+        );
+
+      selectedPanel.innerHTML = `
+        <div class="selected-visual">
+          <div>
+            <div class="large-weather-icon">
+              ${info.icon}
+            </div>
+
+            <strong>${info.label}</strong>
+            <span>${regionName(province.r)}</span>
+          </div>
+        </div>
+
+        <div class="selected-content">
+          <div class="selected-title-row">
+            <div>
+              <h2>${provinceName(province)}</h2>
+              <p>
+                ${province.en} ·
+                ${number(province.lat, 4)},
+                ${number(province.lon, 4)}
+              </p>
+            </div>
+
+            <div class="current-temperature">
+              ${number(current?.temperature, 1)}°C
+            </div>
+          </div>
+
+          <p class="selected-summary">
+            ${summary}
+          </p>
+
+          <div class="metrics">
+            <div class="metric">
+              <span>${text("feelsLike")}</span>
+              <strong>
+                ${number(current?.feels, 1)}°C
+              </strong>
+            </div>
+
+            <div class="metric">
+              <span>${text("humidity")}</span>
+              <strong>
+                ${number(current?.humidity)}%
+              </strong>
+            </div>
+
+            <div class="metric">
+              <span>${text("wind")}</span>
+              <strong>
+                ${number(current?.wind, 1)} km/h
+              </strong>
+            </div>
+
+            <div class="metric">
+              <span>${text("rain")}</span>
+              <strong>
+                ${number(today?.rain)}%
+              </strong>
+            </div>
+
+            <div class="metric">
+              <span>${text("minMax")}</span>
+              <strong>
+                ${number(today?.min)}° /
+                ${number(today?.max)}°
+              </strong>
+            </div>
+
+            <div class="metric">
+              <span>${text("precipitation")}</span>
+              <strong>
+                ${number(today?.precipitation, 1)} mm
+              </strong>
+            </div>
+          </div>
+        </div>
+      `;
+
+      forecastGrid.innerHTML =
+        weather.daily
+          .map((day, index) => {
+            const dayInfo =
+              weatherInformation(day.code);
+
+            return `
+              <article class="forecast-day">
+                <strong>
+                  ${formatForecastDate(day.date, index)}
+                </strong>
+
+                <span class="day-icon">
+                  ${dayInfo.icon}
+                </span>
+
+                <span class="weather-label">
+                  ${dayInfo.label}
+                </span>
+
+                <strong>
+                  ${number(day.min)}° /
+                  ${number(day.max)}°
+                </strong>
+
+                <span class="rain">
+                  💧 ${number(day.rain)}%
+                </span>
+              </article>
+            `;
+          })
+          .join("");
+    }
+
+    function provinceCard(province) {
+      const weather =
+        state.weather[province.id];
+
+      const current = weather?.current;
+      const today = weather?.daily?.[0];
+
+      const info = weatherInformation(
+        current?.code ?? today?.code
+      );
+
+      const active =
+        province.id === state.selectedProvince
+          ? "active"
+          : "";
+
+      return `
+        <button
+          class="province-card ${active}"
+          type="button"
+          data-province-id="${province.id}"
+        >
+          <span class="card-head">
+            <span>
+              <strong>
+                ${provinceName(province)}
+              </strong>
+
+              <span class="region-label">
+                ${regionName(province.r)}
+              </span>
+            </span>
+
+            <span class="card-icon">
+              ${info.icon}
+            </span>
+          </span>
+
+          <span class="card-temp">
+            ${
+              weather
+                ? `${number(current?.temperature, 1)}°C`
+                : "--°C"
+            }
+          </span>
+
+          <span class="card-condition">
+            ${
+              weather
+                ? info.label
+                : text("unavailable")
+            }
+          </span>
+
+          <span class="mini-row">
+            <span>
+              💧 ${
+                weather
+                  ? `${number(today?.rain)}%`
+                  : "--"
+              }
+            </span>
+
+            <span>
+              💨 ${
+                weather
+                  ? `${number(current?.wind, 1)} km/h`
+                  : "--"
+              }
+            </span>
+          </span>
+        </button>
+      `;
+    }
+
+    function renderProvinceGrid() {
+      const filtered = filteredProvinces();
+
+      document.getElementById(
+        "resultCount"
+      ).textContent =
+        `${filtered.length}/77`;
+
+      if (!filtered.length) {
+        provinceGrid.innerHTML = `
+          <div class="empty-state">
+            ${text("noResults")}
+          </div>
+        `;
+
+        feedBody.innerHTML = "";
+        return;
+      }
+
+      provinceGrid.innerHTML =
+        filtered.map(provinceCard).join("");
+
+      provinceGrid
+        .querySelectorAll("[data-province-id]")
+        .forEach(button => {
+          button.addEventListener("click", () => {
+            selectProvince(
+              button.dataset.provinceId
+            );
+
+            const selectedSection =
+              document.querySelector(
+                ".selected-panel"
+              );
+
+            window.scrollTo({
+              top:
+                selectedSection.offsetTop - 110,
+              behavior: "smooth"
+            });
+          });
+        });
+
+      renderFeed(filtered);
+    }
+
+    function renderFeed(items) {
+      feedBody.innerHTML =
+        items.map(province => {
+          const weather =
+            state.weather[province.id];
+
+          const current = weather?.current;
+          const today = weather?.daily?.[0];
+
+          const info = weatherInformation(
+            current?.code ?? today?.code
+          );
+
+          return `
+            <tr>
+              <td>
+                <strong>
+                  ${provinceName(province)}
+                </strong>
+              </td>
+
+              <td>
+                ${regionName(province.r)}
+              </td>
+
+              <td>
+                ${info.icon}
+                ${
+                  weather
+                    ? info.label
+                    : text("unavailable")
+                }
+              </td>
+
+              <td>
+                ${
+                  weather
+                    ? `${number(current?.temperature, 1)}°C`
+                    : "--"
+                }
+              </td>
+
+              <td>
+                ${
+                  weather
+                    ? `${number(today?.rain)}%`
+                    : "--"
+                }
+              </td>
+
+              <td>
+                ${
+                  weather
+                    ? `${number(current?.humidity)}%`
+                    : "--"
+                }
+              </td>
+
+              <td>
+                ${
+                  weather
+                    ? `${number(current?.wind, 1)} km/h`
+                    : "--"
+                }
+              </td>
+            </tr>
+          `;
+        }).join("");
+    }
+
+    function selectProvince(id) {
+      state.selectedProvince = id;
+
+      localStorage.setItem(
+        PROVINCE_KEY,
+        id
+      );
+
+      provinceSelect.value = id;
+
+      renderSelectedProvince();
+      renderProvinceGrid();
+    }
+
+    function applyTranslations() {
+      document.documentElement.lang =
+        state.language;
+
+      document
+        .querySelectorAll("[data-i18n]")
+        .forEach(element => {
+          const key = element.dataset.i18n;
+          const value =
+            dictionary[state.language][key];
+
+          if (typeof value === "string") {
+            element.textContent = value;
+          }
+        });
+
+      document
+        .querySelectorAll(
+          "[data-i18n-placeholder]"
+        )
+        .forEach(element => {
+          const key =
+            element.dataset.i18nPlaceholder;
+
+          element.placeholder =
+            dictionary[state.language][key] || "";
+        });
+
+      document.getElementById(
+        "languageButton"
+      ).textContent =
+        state.language === "th"
+          ? "EN"
+          : "ไทย";
+
+      renderProvinceOptions();
+      renderAll();
+      updateConnectionStatus();
+    }
+
+    function renderUpdateTimes() {
+      document.getElementById(
+        "lastUpdated"
+      ).textContent =
+        formatDateTime(state.lastUpdated);
+
+      document.getElementById(
+        "nextUpdate"
+      ).textContent =
+        state.lastUpdated
+          ? formatDateTime(
+              state.lastUpdated + HOUR
+            )
+          : "--";
+    }
+
+    function renderAll() {
+      renderNationalOverview();
+      renderSelectedProvince();
+      renderProvinceGrid();
+      renderUpdateTimes();
+    }
+
+    function updateConnectionStatus() {
+      const online = navigator.onLine;
+
+      const dot =
+        document.getElementById("statusDot");
+
+      const banner =
+        document.getElementById(
+          "offlineBanner"
+        );
+
+      dot.classList.toggle(
+        "offline",
+        !online
+      );
+
+      banner.classList.toggle(
+        "show",
+        !online
+      );
+
+      document.getElementById(
+        "connectionText"
+      ).textContent =
+        online
+          ? text("online")
+          : text("offline");
+    }
+
+    function setRefreshLoading(loading) {
+      const button =
+        document.getElementById(
+          "refreshButton"
+        );
+
+      const icon =
+        document.getElementById(
+          "refreshIcon"
+        );
+
+      button.disabled = loading;
+
+      icon.innerHTML = loading
+        ? '<span class="loader"></span>'
+        : "↻";
+    }
+
+    function setTheme(theme) {
+      state.theme = theme;
+
+      document.documentElement.dataset.theme =
+        theme;
+
+      document.getElementById(
+        "themeButton"
+      ).textContent =
+        theme === "dark"
+          ? "☀️"
+          : "🌙";
+
+      localStorage.setItem(
+        THEME_KEY,
+        theme
+      );
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      clearTimeout(showToast.timer);
+
+      showToast.timer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2600);
+    }
+
+    function checkAutomaticUpdate() {
+      renderUpdateTimes();
+
+      const dataIsOld =
+        !state.lastUpdated ||
+        Date.now() - state.lastUpdated >= HOUR;
+
+      if (
+        navigator.onLine &&
+        dataIsOld &&
+        !state.fetching
+      ) {
+        refreshWeather(false);
+      }
+    }
+
+    provinceSelect.addEventListener(
+      "change",
+      event => {
+        selectProvince(event.target.value);
+      }
+    );
+
+    regionSelect.addEventListener(
+      "change",
+      event => {
+        state.selectedRegion =
+          event.target.value;
+
+        renderProvinceGrid();
+      }
+    );
+
+    searchInput.addEventListener(
+      "input",
+      event => {
+        state.search = event.target.value;
+        renderProvinceGrid();
+      }
+    );
+
+    document
+      .getElementById("refreshButton")
+      .addEventListener(
+        "click",
+        () => refreshWeather(true)
+      );
+
+    document
+      .getElementById("languageButton")
+      .addEventListener(
+        "click",
+        () => {
+          state.language =
+            state.language === "th"
+              ? "en"
+              : "th";
+
+          localStorage.setItem(
+            LANGUAGE_KEY,
+            state.language
+          );
+
+          applyTranslations();
+        }
+      );
+
+    document
+      .getElementById("themeButton")
+      .addEventListener(
+        "click",
+        () => {
+          setTheme(
+            state.theme === "dark"
+              ? "light"
+              : "dark"
+          );
+        }
+      );
+
+    window.addEventListener(
+      "online",
+      () => {
+        updateConnectionStatus();
+        checkAutomaticUpdate();
+      }
+    );
+
+    window.addEventListener(
+      "offline",
+      updateConnectionStatus
+    );
+
+    document.addEventListener(
+      "visibilitychange",
+      () => {
+        if (!document.hidden) {
+          checkAutomaticUpdate();
+        }
+      }
+    );
+
+    document
+      .getElementById("websiteLogo")
+      .addEventListener(
+        "error",
+        event => {
+          event.currentTarget.style.display =
+            "none";
+
+          document.getElementById(
+            "logoFallback"
+          ).style.display = "block";
+        }
+      );
+
+    function initialise() {
+      document.getElementById(
+        "year"
+      ).textContent =
+        new Date().getFullYear();
+
+      loadCache();
+      setTheme(state.theme);
+      applyTranslations();
+      updateConnectionStatus();
+
+      const needsUpdate =
+        !state.lastUpdated ||
+        Date.now() - state.lastUpdated >= HOUR;
+
+      if (
+        navigator.onLine &&
+        needsUpdate
+      ) {
+        refreshWeather(false);
+      }
+
+      setInterval(
+        checkAutomaticUpdate,
+        60 * 1000
+      );
+    }
+
+    initialise();
+  </script>
+</body>
+</html>

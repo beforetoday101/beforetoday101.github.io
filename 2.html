@@ -1,0 +1,1530 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#edf7ff">
+  <title>Before Today101 | Thailand Weather</title>
+
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7fbff;
+      --surface: rgba(255,255,255,.82);
+      --surface-strong: #ffffff;
+      --text: #223047;
+      --muted: #65738a;
+      --primary: #6979d9;
+      --secondary: #58adad;
+      --accent: #f3a6bd;
+      --warning: #eea85e;
+      --danger: #d96f7c;
+      --border: rgba(91,111,145,.17);
+      --shadow: 0 18px 50px rgba(64,83,120,.13);
+      --hero:
+        linear-gradient(120deg, rgba(93,115,205,.86), rgba(89,176,174,.62)),
+        url("https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?auto=format&fit=crop&w=1800&q=85");
+    }
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #111827;
+      --surface: rgba(28,39,57,.88);
+      --surface-strong: #1b2638;
+      --text: #edf5ff;
+      --muted: #adbbce;
+      --primary: #aeb8ff;
+      --secondary: #8fd8d1;
+      --accent: #f3b2ca;
+      --warning: #ffc47b;
+      --danger: #ff9ba7;
+      --border: rgba(211,225,255,.12);
+      --shadow: 0 18px 55px rgba(0,0,0,.28);
+      --hero:
+        linear-gradient(120deg, rgba(26,36,65,.91), rgba(38,89,90,.75)),
+        url("https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?auto=format&fit=crop&w=1800&q=85");
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(187,210,255,.42), transparent 32%),
+        radial-gradient(circle at 100% 10%, rgba(255,199,215,.33), transparent 29%),
+        var(--bg);
+      font-family:
+        Inter, "Noto Sans Thai", "Segoe UI", Tahoma, Arial, sans-serif;
+      transition: background .25s, color .25s;
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: var(--primary);
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin-inline: auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding: 12px 0;
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(16px);
+    }
+
+    .topbar-inner,
+    .brand,
+    .actions,
+    .status-line,
+    .card-head,
+    .metric,
+    .admin-toolbar {
+      display: flex;
+      align-items: center;
+    }
+
+    .topbar-inner {
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      gap: 11px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #b9c5ff, #a7e4de);
+      box-shadow: var(--shadow);
+      font-size: 22px;
+    }
+
+    .brand strong,
+    .brand small {
+      display: block;
+    }
+
+    .brand small {
+      color: var(--muted);
+    }
+
+    .actions {
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .btn {
+      min-height: 40px;
+      padding: 9px 13px;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      box-shadow: 0 5px 18px rgba(63,84,120,.07);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn.primary {
+      color: #fff;
+      background: linear-gradient(135deg, #7181dc, #5db8ae);
+      border-color: transparent;
+    }
+
+    .btn.danger {
+      color: var(--danger);
+    }
+
+    .hero {
+      min-height: 430px;
+      padding: 78px 0 55px;
+      color: #fff;
+      background-image: var(--hero);
+      background-position: center;
+      background-size: cover;
+      border-radius: 0 0 40px 40px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.35fr .65fr;
+      gap: 30px;
+      align-items: end;
+    }
+
+    .eyebrow,
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.25);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      max-width: 800px;
+      margin: 18px 0 12px;
+      font-size: clamp(2.25rem, 6vw, 5.2rem);
+      line-height: .98;
+      letter-spacing: -.04em;
+    }
+
+    .hero p {
+      max-width: 790px;
+      margin: 0;
+      color: rgba(255,255,255,.9);
+      font-size: 1.05rem;
+      line-height: 1.75;
+    }
+
+    .overview-panel {
+      padding: 22px;
+      background: rgba(255,255,255,.17);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 25px;
+      backdrop-filter: blur(17px);
+    }
+
+    .overview-temp {
+      margin: 10px 0;
+      font-size: 3.2rem;
+      font-weight: 800;
+    }
+
+    .status-line {
+      justify-content: space-between;
+      gap: 12px;
+      color: rgba(255,255,255,.88);
+    }
+
+    main {
+      padding: 40px 0 70px;
+    }
+
+    .notice,
+    .feed,
+    .source-box {
+      padding: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .notice {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 16px;
+      margin-bottom: 35px;
+      border-left: 5px solid var(--warning);
+    }
+
+    .notice-icon {
+      font-size: 27px;
+    }
+
+    .notice h2,
+    .notice p {
+      margin: 0;
+    }
+
+    .notice p {
+      margin-top: 6px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin: 35px 0 17px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.55rem, 3vw, 2.25rem);
+    }
+
+    .section-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+    }
+
+    .update {
+      color: var(--muted);
+      font-size: .9rem;
+      text-align: right;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .weather-card {
+      position: relative;
+      min-height: 390px;
+      overflow: hidden;
+      background: var(--surface-strong);
+      border: 1px solid var(--border);
+      border-radius: 25px;
+      box-shadow: var(--shadow);
+    }
+
+    .weather-card.featured {
+      grid-column: span 2;
+    }
+
+    .card-image {
+      height: 160px;
+      background:
+        linear-gradient(180deg, transparent, rgba(15,25,45,.45)),
+        linear-gradient(135deg, #b9c5ff, #a7e4de);
+      background-position: center;
+      background-size: cover;
+    }
+
+    .card-body {
+      padding: 19px;
+    }
+
+    .card-head {
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .card-head h3 {
+      margin: 0;
+      font-size: 1.3rem;
+    }
+
+    .weather-icon {
+      font-size: 32px;
+    }
+
+    .location {
+      margin: 4px 0 13px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .summary {
+      min-height: 50px;
+      margin: 0 0 15px;
+      line-height: 1.65;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 9px;
+    }
+
+    .metric {
+      justify-content: space-between;
+      gap: 7px;
+      padding: 10px;
+      background: color-mix(in srgb, var(--primary) 8%, transparent);
+      border-radius: 13px;
+      font-size: .9rem;
+    }
+
+    .metric span:first-child {
+      color: var(--muted);
+    }
+
+    .admin-image-button {
+      display: none;
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 3;
+    }
+
+    body.admin-on .admin-image-button {
+      display: block;
+    }
+
+    .feed {
+      margin-top: 40px;
+    }
+
+    .feed-list {
+      display: grid;
+      gap: 1px;
+      margin-top: 15px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+    }
+
+    .feed-row {
+      display: grid;
+      grid-template-columns: 1.15fr .8fr .8fr .8fr 1.8fr;
+      gap: 12px;
+      padding: 13px 15px;
+      background: color-mix(in srgb, var(--surface-strong) 92%, var(--primary));
+    }
+
+    .feed-row:nth-child(even) {
+      background: var(--surface);
+    }
+
+    .feed-row strong {
+      color: var(--primary);
+    }
+
+    .source-box {
+      margin-top: 22px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .source-box strong {
+      color: var(--text);
+    }
+
+    .admin-toolbar {
+      display: none;
+      position: fixed;
+      z-index: 30;
+      left: 50%;
+      bottom: 18px;
+      width: min(760px, calc(100% - 26px));
+      padding: 11px;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      transform: translateX(-50%);
+      background: var(--surface-strong);
+      border: 1px solid var(--border);
+      border-radius: 19px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    }
+
+    body.admin-on .admin-toolbar {
+      display: flex;
+    }
+
+    .editing [contenteditable="true"] {
+      outline: 2px dashed var(--accent);
+      outline-offset: 5px;
+      border-radius: 5px;
+    }
+
+    dialog {
+      width: min(440px, calc(100% - 28px));
+      padding: 0;
+      color: var(--text);
+      background: var(--surface-strong);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 30px 90px rgba(0,0,0,.35);
+    }
+
+    dialog::backdrop {
+      background: rgba(10,18,32,.58);
+      backdrop-filter: blur(6px);
+    }
+
+    .dialog-inner {
+      padding: 25px;
+    }
+
+    .dialog-inner h2 {
+      margin-top: 0;
+    }
+
+    .dialog-inner input {
+      width: 100%;
+      margin: 8px 0 14px;
+      padding: 13px;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+    }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .error {
+      min-height: 22px;
+      color: var(--danger);
+      font-size: .9rem;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 50;
+      right: 18px;
+      bottom: 18px;
+      max-width: 340px;
+      padding: 13px 16px;
+      color: #fff;
+      background: #28364d;
+      border-radius: 13px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(15px);
+      transition: .25s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .loader {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      border: 2px solid currentColor;
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .cards {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .hero-grid {
+        align-items: stretch;
+      }
+
+      .weather-card.featured {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .brand small {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 55px;
+      }
+
+      .hero-grid,
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .weather-card.featured {
+        grid-column: auto;
+      }
+
+      .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .update {
+        text-align: left;
+      }
+
+      .feed-row {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .feed-row span:last-child {
+        grid-column: 1 / -1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">☁️</div>
+        <div>
+          <strong>Before Today101</strong>
+          <small data-i18n="brandSub">ศูนย์ข้อมูลอากาศประเทศไทย</small>
+        </div>
+      </div>
+
+      <nav class="actions" aria-label="เครื่องมือ">
+        <button class="btn" id="refreshBtn" type="button">
+          <span id="refreshIcon">↻</span>
+          <span data-i18n="refresh">อัปเดต</span>
+        </button>
+        <button class="btn" id="langBtn" type="button">EN</button>
+        <button class="btn" id="themeBtn" type="button" aria-label="เปลี่ยนธีม">🌙</button>
+        <button class="btn" id="adminBtn" type="button" aria-label="ผู้ดูแลระบบ">🔒</button>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow">
+          <span id="liveDot">●</span>
+          <span data-i18n="liveWeather">ข้อมูลอากาศแบบออนไลน์</span>
+        </span>
+
+        <h1 data-i18n="heroTitle">อากาศประเทศไทยวันนี้</h1>
+
+        <p
+          id="heroSummary"
+          class="editable"
+          data-edit-key="heroSummary"
+          data-i18n="heroSummary"
+        >
+          สรุปภาพรวมทุกภูมิภาค โดยเน้นภาคตะวันตก พร้อมข้อมูลอุณหภูมิ
+          โอกาสเกิดฝน ลม และสภาพอากาศจากจังหวัดตัวแทน
+        </p>
+      </div>
+
+      <aside class="overview-panel">
+        <span class="badge" data-i18n="nationalOverview">ภาพรวมประเทศ</span>
+        <div class="overview-temp" id="nationalTemp">--°C</div>
+        <div class="status-line">
+          <span data-i18n="highestRain">โอกาสฝนสูงสุด</span>
+          <strong id="nationalRain">--%</strong>
+        </div>
+        <div class="status-line">
+          <span data-i18n="strongestWind">ลมแรงสุด</span>
+          <strong id="nationalWind">-- km/h</strong>
+        </div>
+        <div class="status-line">
+          <span data-i18n="regionsAvailable">พื้นที่ที่มีข้อมูล</span>
+          <strong id="availableRegions">0/7</strong>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <main class="container">
+    <section class="notice" aria-labelledby="officialHeading">
+      <div class="notice-icon" aria-hidden="true">⚠️</div>
+      <div>
+        <h2 id="officialHeading" data-i18n="officialHeading">
+          สรุปประกาศกรมอุตุนิยมวิทยา
+        </h2>
+        <p
+          class="editable"
+          data-edit-key="officialNote"
+          data-i18n="officialNote"
+        >
+          ข้อมูลอ้างอิงวันที่ 29 กันยายน 2569: ประเทศไทยมีฝนลดลง
+          แต่ยังมีฝนตกหนักบางพื้นที่ ควรติดตามประกาศและเรดาร์อย่างต่อเนื่อง
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2 data-i18n="regionalTitle">พยากรณ์รายภูมิภาค</h2>
+          <p data-i18n="regionalSub">
+            ภาคตะวันตกแสดงเป็นลำดับแรก ข้อมูลรายจุดจากจังหวัดตัวแทน
+          </p>
+        </div>
+
+        <div class="update">
+          <span data-i18n="lastUpdated">อัปเดตล่าสุด</span>:
+          <strong id="updatedAt">--</strong>
+        </div>
+      </div>
+
+      <div class="cards" id="cards"></div>
+    </section>
+
+    <section class="feed" aria-labelledby="feedHeading">
+      <div class="section-head">
+        <div>
+          <h2 id="feedHeading" data-i18n="feedTitle">
+            ข้อมูลสภาพอากาศต่อเนื่อง
+          </h2>
+          <p data-i18n="feedSub">
+            ระบบตรวจสอบข้อมูลใหม่ทุก 10 นาทีเมื่อหน้าเว็บเปิดอยู่
+          </p>
+        </div>
+      </div>
+
+      <div class="feed-list" id="feedList"></div>
+    </section>
+
+    <section class="source-box">
+      <strong data-i18n="sources">แหล่งข้อมูลและข้อจำกัด:</strong>
+      <span data-i18n="sourceText">
+        ข้อมูลรายจุดดึงจาก Open-Meteo โดยใช้พิกัดจังหวัดตัวแทน
+        จึงไม่ใช่ตัวแทนทุกจังหวัดในภูมิภาค โปรดตรวจสอบประกาศทางการ
+        สำหรับการเดินทาง การเดินเรือ และการรับมือภัยพิบัติ
+      </span>
+      <div>
+        <a
+          href="https://www.tmd.go.th/weather/weatherthailand"
+          target="_blank"
+          rel="noopener noreferrer"
+        >กรมอุตุนิยมวิทยา</a>
+        ·
+        <a
+          href="https://www.tmd.go.th/forecast/sevenday"
+          target="_blank"
+          rel="noopener noreferrer"
+        >พยากรณ์ 7 วัน</a>
+        ·
+        <a
+          href="https://open-meteo.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >Open-Meteo</a>
+      </div>
+    </section>
+  </main>
+
+  <div class="admin-toolbar" id="adminToolbar" aria-label="เครื่องมือผู้ดูแล">
+    <strong data-i18n="adminMode">โหมดผู้ดูแล</strong>
+    <button class="btn" id="editBtn" type="button" data-i18n="edit">
+      แก้ไข
+    </button>
+    <button class="btn primary" id="saveBtn" type="button" data-i18n="save">
+      บันทึก
+    </button>
+    <button class="btn" id="copyBtn" type="button" data-i18n="copy">
+      คัดลอกสรุป
+    </button>
+    <button class="btn danger" id="resetBtn" type="button" data-i18n="reset">
+      ล้างข้อความแก้ไข
+    </button>
+    <button class="btn" id="logoutBtn" type="button" data-i18n="logout">
+      ออกจากระบบ
+    </button>
+  </div>
+
+  <dialog id="loginDialog">
+    <form class="dialog-inner" id="loginForm">
+      <h2 data-i18n="adminLogin">เข้าสู่ระบบผู้ดูแล</h2>
+      <label for="passwordInput" data-i18n="password">รหัสผ่าน</label>
+      <input
+        id="passwordInput"
+        type="password"
+        autocomplete="current-password"
+        required
+      >
+      <div class="error" id="loginError" role="alert"></div>
+      <div class="dialog-actions">
+        <button class="btn" id="cancelLogin" type="button" data-i18n="cancel">
+          ยกเลิก
+        </button>
+        <button class="btn primary" type="submit" data-i18n="login">
+          เข้าสู่ระบบ
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    "use strict";
+
+    const regions = [
+      {
+        id: "west",
+        th: "ภาคตะวันตก",
+        en: "Western Thailand",
+        pointTh: "จุดตัวแทน: กาญจนบุรี",
+        pointEn: "Representative point: Kanchanaburi",
+        lat: 14.0228,
+        lon: 99.5328,
+        featured: true,
+        image: "https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?auto=format&fit=crop&w=1200&q=80"
+      },
+      {
+        id: "north",
+        th: "ภาคเหนือ",
+        en: "Northern Thailand",
+        pointTh: "จุดตัวแทน: เชียงใหม่",
+        pointEn: "Representative point: Chiang Mai",
+        lat: 18.7883,
+        lon: 98.9853,
+        image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80"
+      },
+      {
+        id: "northeast",
+        th: "ภาคตะวันออกเฉียงเหนือ",
+        en: "Northeastern Thailand",
+        pointTh: "จุดตัวแทน: ขอนแก่น",
+        pointEn: "Representative point: Khon Kaen",
+        lat: 16.4419,
+        lon: 102.8359,
+        image: "https://images.unsplash.com/photo-1499346030926-9a72daac6c63?auto=format&fit=crop&w=1200&q=80"
+      },
+      {
+        id: "central",
+        th: "ภาคกลาง",
+        en: "Central Thailand",
+        pointTh: "จุดตัวแทน: กรุงเทพมหานคร",
+        pointEn: "Representative point: Bangkok",
+        lat: 13.7563,
+        lon: 100.5018,
+        image: "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?auto=format&fit=crop&w=1200&q=80"
+      },
+      {
+        id: "east",
+        th: "ภาคตะวันออก",
+        en: "Eastern Thailand",
+        pointTh: "จุดตัวแทน: ชลบุรี",
+        pointEn: "Representative point: Chonburi",
+        lat: 13.3611,
+        lon: 100.9847,
+        image: "https://images.unsplash.com/photo-1514632595-4944383f2737?auto=format&fit=crop&w=1200&q=80"
+      },
+      {
+        id: "southGulf",
+        th: "ภาคใต้ฝั่งอ่าวไทย",
+        en: "Southern Gulf Coast",
+        pointTh: "จุดตัวแทน: สุราษฎร์ธานี",
+        pointEn: "Representative point: Surat Thani",
+        lat: 9.1382,
+        lon: 99.3217,
+        image: "https://images.unsplash.com/photo-1527766833261-b09c3163a791?auto=format&fit=crop&w=1200&q=80"
+      },
+      {
+        id: "southAndaman",
+        th: "ภาคใต้ฝั่งอันดามัน",
+        en: "Southern Andaman Coast",
+        pointTh: "จุดตัวแทน: ภูเก็ต",
+        pointEn: "Representative point: Phuket",
+        lat: 7.8804,
+        lon: 98.3923,
+        image: "https://images.unsplash.com/photo-1561553590-267fc716698a?auto=format&fit=crop&w=1200&q=80"
+      }
+    ];
+
+    const dictionary = {
+      th: {
+        brandSub: "ศูนย์ข้อมูลอากาศประเทศไทย",
+        refresh: "อัปเดต",
+        liveWeather: "ข้อมูลอากาศแบบออนไลน์",
+        heroTitle: "อากาศประเทศไทยวันนี้",
+        heroSummary: "สรุปภาพรวมทุกภูมิภาค โดยเน้นภาคตะวันตก พร้อมข้อมูลอุณหภูมิ โอกาสเกิดฝน ลม และสภาพอากาศจากจังหวัดตัวแทน",
+        nationalOverview: "ภาพรวมประเทศ",
+        highestRain: "โอกาสฝนสูงสุด",
+        strongestWind: "ลมแรงสุด",
+        regionsAvailable: "พื้นที่ที่มีข้อมูล",
+        officialHeading: "สรุปประกาศกรมอุตุนิยมวิทยา",
+        officialNote: "ข้อมูลอ้างอิงวันที่ 29 กันยายน 2569: ประเทศไทยมีฝนลดลง แต่ยังมีฝนตกหนักบางพื้นที่ ควรติดตามประกาศและเรดาร์อย่างต่อเนื่อง",
+        regionalTitle: "พยากรณ์รายภูมิภาค",
+        regionalSub: "ภาคตะวันตกแสดงเป็นลำดับแรก ข้อมูลรายจุดจากจังหวัดตัวแทน",
+        lastUpdated: "อัปเดตล่าสุด",
+        feedTitle: "ข้อมูลสภาพอากาศต่อเนื่อง",
+        feedSub: "ระบบตรวจสอบข้อมูลใหม่ทุก 10 นาทีเมื่อหน้าเว็บเปิดอยู่",
+        sources: "แหล่งข้อมูลและข้อจำกัด:",
+        sourceText: "ข้อมูลรายจุดดึงจาก Open-Meteo โดยใช้พิกัดจังหวัดตัวแทน จึงไม่ใช่ตัวแทนทุกจังหวัดในภูมิภาค โปรดตรวจสอบประกาศทางการสำหรับการเดินทาง การเดินเรือ และการรับมือภัยพิบัติ",
+        adminMode: "โหมดผู้ดูแล",
+        edit: "แก้ไข",
+        stopEdit: "หยุดแก้ไข",
+        save: "บันทึก",
+        copy: "คัดลอกสรุป",
+        reset: "ล้างข้อความแก้ไข",
+        logout: "ออกจากระบบ",
+        adminLogin: "เข้าสู่ระบบผู้ดูแล",
+        password: "รหัสผ่าน",
+        cancel: "ยกเลิก",
+        login: "เข้าสู่ระบบ",
+        temperature: "อุณหภูมิ",
+        feels: "รู้สึกเหมือน",
+        rain: "โอกาสฝน",
+        wind: "ความเร็วลม",
+        humidity: "ความชื้น",
+        minMax: "ต่ำสุด/สูงสุด",
+        loading: "กำลังโหลดข้อมูล...",
+        unavailable: "ไม่สามารถโหลดข้อมูลได้",
+        editImage: "แก้ไขภาพ",
+        imagePrompt: "ใส่ URL รูปภาพแบบ HTTPS",
+        saved: "บันทึกข้อมูลแล้ว",
+        copied: "คัดลอกสรุปแล้ว",
+        resetDone: "ล้างข้อความที่แก้ไขแล้ว",
+        loginFailed: "รหัสผ่านไม่ถูกต้อง",
+        locked: "พยายามหลายครั้งเกินไป กรุณารอ 30 วินาที",
+        logoutDone: "ออกจากโหมดผู้ดูแลแล้ว",
+        average: "อุณหภูมิเฉลี่ยจากจุดตัวแทน",
+        weather: {
+          clear: "ท้องฟ้าแจ่มใส",
+          partly: "มีเมฆบางส่วน",
+          cloudy: "เมฆมาก",
+          fog: "มีหมอก",
+          drizzle: "ฝนละออง",
+          rain: "มีฝน",
+          showers: "ฝนตกเป็นแห่ง ๆ",
+          storm: "มีพายุฝนฟ้าคะนอง",
+          unknown: "สภาพอากาศไม่แน่นอน"
+        }
+      },
+
+      en: {
+        brandSub: "Thailand Weather Information Center",
+        refresh: "Refresh",
+        liveWeather: "Online weather information",
+        heroTitle: "Thailand Weather Today",
+        heroSummary: "A nationwide overview with emphasis on Western Thailand, showing temperature, rain probability, wind and conditions from representative locations.",
+        nationalOverview: "National overview",
+        highestRain: "Highest rain chance",
+        strongestWind: "Strongest wind",
+        regionsAvailable: "Available areas",
+        officialHeading: "Thai Meteorological Department summary",
+        officialNote: "Reference snapshot for 29 September 2026: rainfall is decreasing across Thailand, although isolated heavy rain remains possible. Continue monitoring official alerts and radar.",
+        regionalTitle: "Regional forecast",
+        regionalSub: "Western Thailand appears first. Values are point forecasts from representative locations.",
+        lastUpdated: "Last updated",
+        feedTitle: "Continuous weather feed",
+        feedSub: "The page checks for new information every 10 minutes while open.",
+        sources: "Sources and limitations:",
+        sourceText: "Point forecasts are retrieved from Open-Meteo using representative coordinates. They do not represent every province. Consult official warnings before travel, marine activities or emergency decisions.",
+        adminMode: "Administrator mode",
+        edit: "Edit",
+        stopEdit: "Stop editing",
+        save: "Save",
+        copy: "Copy summary",
+        reset: "Clear edits",
+        logout: "Log out",
+        adminLogin: "Administrator login",
+        password: "Password",
+        cancel: "Cancel",
+        login: "Log in",
+        temperature: "Temperature",
+        feels: "Feels like",
+        rain: "Rain chance",
+        wind: "Wind",
+        humidity: "Humidity",
+        minMax: "Low/High",
+        loading: "Loading information...",
+        unavailable: "Weather information is unavailable",
+        editImage: "Edit image",
+        imagePrompt: "Enter an HTTPS image URL",
+        saved: "Information saved",
+        copied: "Summary copied",
+        resetDone: "Saved edits cleared",
+        loginFailed: "Incorrect password",
+        locked: "Too many attempts. Please wait 30 seconds.",
+        logoutDone: "Administrator mode closed",
+        average: "Average temperature from representative points",
+        weather: {
+          clear: "Clear",
+          partly: "Partly cloudy",
+          cloudy: "Cloudy",
+          fog: "Foggy",
+          drizzle: "Drizzle",
+          rain: "Rain",
+          showers: "Rain showers",
+          storm: "Thunderstorms",
+          unknown: "Uncertain conditions"
+        }
+      }
+    };
+
+    const state = {
+      lang: localStorage.getItem("bt101-lang") || "th",
+      theme: localStorage.getItem("bt101-theme") || "light",
+      data: {},
+      editing: false,
+      attempts: 0,
+      lockedUntil: 0,
+      images: JSON.parse(localStorage.getItem("bt101-images") || "{}"),
+      overrides: JSON.parse(localStorage.getItem("bt101-overrides") || "{}")
+    };
+
+    const cards = document.getElementById("cards");
+    const feedList = document.getElementById("feedList");
+    const loginDialog = document.getElementById("loginDialog");
+    const passwordInput = document.getElementById("passwordInput");
+    const loginError = document.getElementById("loginError");
+    const toast = document.getElementById("toast");
+
+    /* ไม่เก็บรหัสผ่านเป็นข้อความตรง ๆ แต่ยังไม่ใช่ระบบรักษาความปลอดภัยจริง */
+    const ADMIN_CODES = [
+      64, 42, 42, 42, 42, 42, 64, 42, 42, 42, 42, 33
+    ];
+
+    function t(key) {
+      return dictionary[state.lang][key] ?? key;
+    }
+
+    function validAdminPassword(value) {
+      if (value.length !== ADMIN_CODES.length) return false;
+
+      let difference = 0;
+      for (let i = 0; i < ADMIN_CODES.length; i++) {
+        difference |= value.charCodeAt(i) ^ ADMIN_CODES[i];
+      }
+      return difference === 0;
+    }
+
+    function safeImageUrl(value) {
+      try {
+        const url = new URL(value);
+        return url.protocol === "https:" ? url.href : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function getImage(region) {
+      return state.images[region.id] || region.image;
+    }
+
+    function weatherInfo(code) {
+      const labels = dictionary[state.lang].weather;
+
+      if (code === 0) return { text: labels.clear, icon: "☀️" };
+      if ([1, 2].includes(code)) return { text: labels.partly, icon: "⛅" };
+      if (code === 3) return { text: labels.cloudy, icon: "☁️" };
+      if ([45, 48].includes(code)) return { text: labels.fog, icon: "🌫️" };
+      if ([51, 53, 55, 56, 57].includes(code)) {
+        return { text: labels.drizzle, icon: "🌦️" };
+      }
+      if ([61, 63, 65, 66, 67].includes(code)) {
+        return { text: labels.rain, icon: "🌧️" };
+      }
+      if ([80, 81, 82].includes(code)) {
+        return { text: labels.showers, icon: "🌦️" };
+      }
+      if ([95, 96, 99].includes(code)) {
+        return { text: labels.storm, icon: "⛈️" };
+      }
+      return { text: labels.unknown, icon: "🌤️" };
+    }
+
+    function regionName(region) {
+      return state.lang === "th" ? region.th : region.en;
+    }
+
+    function pointName(region) {
+      return state.lang === "th" ? region.pointTh : region.pointEn;
+    }
+
+    function formatNumber(value, digits = 0) {
+      if (!Number.isFinite(value)) return "--";
+      return new Intl.NumberFormat(
+        state.lang === "th" ? "th-TH" : "en-US",
+        { maximumFractionDigits: digits }
+      ).format(value);
+    }
+
+    function formatDate(date = new Date()) {
+      return new Intl.DateTimeFormat(
+        state.lang === "th" ? "th-TH" : "en-GB",
+        {
+          dateStyle: "medium",
+          timeStyle: "short",
+          timeZone: "Asia/Bangkok"
+        }
+      ).format(date);
+    }
+
+    function getOverride(key) {
+      return state.overrides?.[state.lang]?.[key] || "";
+    }
+
+    function cardSummary(region, item) {
+      const custom = getOverride(`summary-${region.id}`);
+      if (custom) return custom;
+      if (!item) return t("unavailable");
+
+      const weather = weatherInfo(item.code);
+      const rain = formatNumber(item.rain);
+      const low = formatNumber(item.min);
+      const high = formatNumber(item.max);
+
+      if (state.lang === "th") {
+        return `${weather.text} อุณหภูมิต่ำสุด ${low}°C สูงสุด ${high}°C และมีโอกาสเกิดฝนสูงสุดประมาณ ${rain}%`;
+      }
+
+      return `${weather.text}, with a low of ${low}°C, a high of ${high}°C and a maximum rain probability of about ${rain}%.`;
+    }
+
+    function cardTemplate(region) {
+      const item = state.data[region.id];
+      const info = item
+        ? weatherInfo(item.code)
+        : { text: t("loading"), icon: '<span class="loader"></span>' };
+
+      return `
+        <article class="weather-card ${region.featured ? "featured" : ""}">
+          <button
+            class="btn admin-image-button"
+            type="button"
+            data-image-id="${region.id}"
+          >
+            ${t("editImage")}
+          </button>
+
+          <div
+            class="card-image"
+            style="background-image:
+              linear-gradient(180deg,transparent,rgba(15,25,45,.50)),
+              url('${getImage(region)}')"
+            role="img"
+            aria-label="${regionName(region)}"
+          ></div>
+
+          <div class="card-body">
+            <div class="card-head">
+              <h3>${regionName(region)}</h3>
+              <div class="weather-icon">${info.icon}</div>
+            </div>
+
+            <p class="location">${pointName(region)}</p>
+
+            <p
+              class="summary editable"
+              data-edit-key="summary-${region.id}"
+            >${cardSummary(region, item)}</p>
+
+            <div class="metrics">
+              <div class="metric">
+                <span>${t("temperature")}</span>
+                <strong>${item ? formatNumber(item.temp, 1) : "--"}°C</strong>
+              </div>
+              <div class="metric">
+                <span>${t("feels")}</span>
+                <strong>${item ? formatNumber(item.feels, 1) : "--"}°C</strong>
+              </div>
+              <div class="metric">
+                <span>${t("rain")}</span>
+                <strong>${item ? formatNumber(item.rain) : "--"}%</strong>
+              </div>
+              <div class="metric">
+                <span>${t("wind")}</span>
+                <strong>${item ? formatNumber(item.wind, 1) : "--"} km/h</strong>
+              </div>
+              <div class="metric">
+                <span>${t("humidity")}</span>
+                <strong>${item ? formatNumber(item.humidity) : "--"}%</strong>
+              </div>
+              <div class="metric">
+                <span>${t("minMax")}</span>
+                <strong>${item ? `${formatNumber(item.min)}° / ${formatNumber(item.max)}°` : "--"}</strong>
+              </div>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderCards() {
+      cards.innerHTML = regions.map(cardTemplate).join("");
+      applyStaticOverrides();
+      bindImageButtons();
+
+      if (state.editing) {
+        setEditable(true);
+      }
+    }
+
+    function renderFeed() {
+      feedList.innerHTML = regions.map(region => {
+        const item = state.data[region.id];
+        const info = item ? weatherInfo(item.code) : null;
+
+        return `
+          <div class="feed-row">
+            <strong>${regionName(region)}</strong>
+            <span>${item ? `${formatNumber(item.temp, 1)}°C` : "--"}</span>
+            <span>${t("rain")}: ${item ? `${formatNumber(item.rain)}%` : "--"}</span>
+            <span>${t("wind")}: ${item ? `${formatNumber(item.wind, 1)} km/h` : "--"}</span>
+            <span>${info ? `${info.icon} ${info.text}` : t("unavailable")}</span>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderOverview() {
+      const values = Object.values(state.data);
+      const valid = values.filter(item => Number.isFinite(item.temp));
+
+      document.getElementById("availableRegions").textContent =
+        `${valid.length}/${regions.length}`;
+
+      if (!valid.length) {
+        document.getElementById("nationalTemp").textContent = "--°C";
+        document.getElementById("nationalRain").textContent = "--%";
+        document.getElementById("nationalWind").textContent = "-- km/h";
+        return;
+      }
+
+      const average =
+        valid.reduce((sum, item) => sum + item.temp, 0) / valid.length;
+
+      const highestRain = Math.max(...valid.map(item => item.rain || 0));
+      const strongestWind = Math.max(...valid.map(item => item.wind || 0));
+
+      document.getElementById("nationalTemp").textContent =
+        `${formatNumber(average, 1)}°C`;
+
+      document.getElementById("nationalRain").textContent =
+        `${formatNumber(highestRain)}%`;
+
+      document.getElementById("nationalWind").textContent =
+        `${formatNumber(strongestWind, 1)} km/h`;
+    }
+
+    async function fetchRegion(region) {
+      const params = new URLSearchParams({
+        latitude: region.lat,
+        longitude: region.lon,
+        timezone: "Asia/Bangkok",
+        forecast_days: "1",
+        current: [
+          "temperature_2m",
+          "relative_humidity_2m",
+          "apparent_temperature",
+          "weather_code",
+          "wind_speed_10m"
+        ].join(","),
+        daily: [
+          "temperature_2m_max",
+          "temperature_2m_min",
+          "precipitation_probability_max",
+          "weather_code"
+        ].join(",")
+      });
+
+      const response = await fetch(
+        `https://api.open-meteo.com/v1/forecast?${params.toString()}`,
+        { cache: "no-store" }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Weather request failed: ${response.status}`);
+      }
+
+      const json = await response.json();
+
+      return {
+        temp: json.current?.temperature_2m,
+        feels: json.current?.apparent_temperature,
+        humidity: json.current?.relative_humidity_2m,
+        wind: json.current?.wind_speed_10m,
+        code: json.current?.weather_code ?? json.daily?.weather_code?.[0],
+        rain: json.daily?.precipitation_probability_max?.[0] ?? 0,
+        min: json.daily?.temperature_2m_min?.[0],
+        max: json.daily?.temperature_2m_max?.[0],
+        time: json.current?.time
+      };
+    }
+
+    async function loadWeather() {
+      const refreshIcon = document.getElementById("refreshIcon");
+      refreshIcon.innerHTML = '<span class="loader"></span>';
+
+      const results = await Promise.allSettled(
+        regions.map(region => fetchRegion(region))
+      );
+
+      results.forEach((result, index) => {
+        const region = regions[index];
+
+        if (result.status === "fulfilled") {
+          state.data[region.id] = result.value;
+        } else {
+          delete state.data[region.id];
+          console.error(region.id, result.reason);
+        }
+      });
+
+      document.getElementById("updatedAt").textContent = formatDate();
+      refreshIcon.textContent = "↻";
+
+      renderCards();
+      renderFeed();
+      renderOverview();
+    }
+
+    function applyTranslations() {
+      document.documentElement.lang = state.lang;
+
+      document.querySelectorAll("[data-i18n]").forEach(element => {
+        const key = element.dataset.i18n;
+        if (dictionary[state.lang][key]) {
+          element.textContent = dictionary[state.lang][key];
+        }
+      });
+
+      document.getElementById("langBtn").textContent =
+        state.lang === "th" ? "EN" : "ไทย";
+
+      applyStaticOverrides();
+      renderCards();
+      renderFeed();
+      renderOverview();
+      document.getElementById("updatedAt").textContent = formatDate();
+    }
+
+    function applyStaticOverrides() {
+      document.querySelectorAll("[data-edit-key]").forEach(element => {
+        const custom = getOverride(element.dataset.editKey);
+        if (custom) element.textContent = custom;
+      });
+    }
+
+    function setEditable(enabled) {
+      state.editing = enabled;
+      document.body.classList.toggle("editing", enabled);
+
+      document.querySelectorAll(".editable").forEach(element => {
+        element.contentEditable = enabled ? "true" : "false";
+      });
+
+      document.getElementById("editBtn").textContent =
+        enabled ? t("stopEdit") : t("edit");
+    }
+
+    function saveEdits() {
+      state.overrides[state.lang] ||= {};
+
+      document.querySelectorAll("[data-edit-key]").forEach(element => {
+        state.overrides[state.lang][element.dataset.editKey] =
+          element.textContent.trim();
+      });
+
+      localStorage.setItem(
+        "bt101-overrides",
+        JSON.stringify(state.overrides)
+      );
+
+      setEditable(false);
+      showToast(t("saved"));
+    }
+
+    function resetEdits() {
+      if (!confirm(t("reset"))) return;
+
+      state.overrides[state.lang] = {};
+      localStorage.setItem(
+        "bt101-overrides",
+        JSON.stringify(state.overrides)
+      );
+
+      applyTranslations();
+      showToast(t("resetDone"));
+    }
+
+    function bindImageButtons() {
+      document.querySelectorAll("[data-image-id]").forEach(button => {
+        button.addEventListener("click", () => {
+          const id = button.dataset.imageId;
+          const region = regions.find(item => item.id === id);
+          const entered = prompt(
+            t("imagePrompt"),
+            state.images[id] || region.image
+          );
+
+          if (entered === null) return;
+
+          const url = safeImageUrl(entered.trim());
+          if (!url) {
+            showToast("Please use a valid HTTPS image URL.");
+            return;
+          }
+
+          state.images[id] = url;
+          localStorage.setItem(
+            "bt101-images",
+            JSON.stringify(state.images)
+          );
+          renderCards();
+        });
+      });
+    }
+
+    async function copySummary() {
+      const lines = [
+        `Before Today101`,
+        `${t("lastUpdated")}: ${document.getElementById("updatedAt").textContent}`,
+        "",
+        document.getElementById("heroSummary").textContent.trim(),
+        ""
+      ];
+
+      regions.forEach(region => {
+        const item = state.data[region.id];
+        lines.push(`${regionName(region)} — ${cardSummary(region, item)}`);
+
+        if (item) {
+          lines.push(
+            `${t("temperature")}: ${formatNumber(item.temp, 1)}°C | ` +
+            `${t("rain")}: ${formatNumber(item.rain)}% | ` +
+            `${t("wind")}: ${formatNumber(item.wind, 1)} km/h`
+          );
+        }
+
+        lines.push("");
+      });
+
+      const text = lines.join("\n");
+
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const area = document.createElement("textarea");
+        area.value = text;
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        area.remove();
+      }
+
+      showToast(t("copied"));
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2500);
+    }
+
+    function setTheme(theme) {
+      state.theme = theme;
+      document.documentElement.dataset.theme = theme;
+      document.getElementById("themeBtn").textContent =
+        theme === "dark" ? "☀️" : "🌙";
+      localStorage.setItem("bt101-theme", theme);
+    }
+
+    document.getElementById("themeBtn").addEventListener("click", () => {
+      setTheme(state.theme === "dark" ? "light" : "dark");
+    });
+
+    document.getElementById("langBtn").addEventListener("click", () => {
+      if (state.editing) setEditable(false);
+
+      state.lang = state.lang === "th" ? "en" : "th";
+      localStorage.setItem("bt101-lang", state.lang);
+      applyTranslations();
+    });
+
+    document.getElementById("refreshBtn").addEventListener(
+      "click",
+      loadWeather
+    );
+
+    document.getElementById("adminBtn").addEventListener("click", () => {
+      loginError.textContent = "";
+      passwordInput.value = "";
+      loginDialog.showModal();
+      setTimeout(() => passwordInput.focus(), 50);
+    });
+
+    document.getElementById("cancelLogin").addEventListener("click", () => {
+      loginDialog.close();
+    });
+
+    document.getElementById("loginForm").addEventListener("submit", event => {
+      event.preventDefault();
+
+      if (Date.now() < state.lockedUntil) {
+        loginError.textContent = t("locked");
+        return;
+      }
+
+      if (validAdminPassword(passwordInput.value)) {
+        state.attempts = 0;
+        passwordInput.value = "";
+        loginDialog.close();
+        document.body.classList.add("admin-on");
+        setEditable(false);
+        return;
+      }
+
+      state.attempts += 1;
+      loginError.textContent = t("loginFailed");
+
+      if (state.attempts >= 5) {
+        state.lockedUntil = Date.now() + 30000;
+        state.attempts = 0;
+        loginError.textContent = t("locked");
+      }
+    });
+
+    document.getElementById("editBtn").addEventListener("click", () => {
+      setEditable(!state.editing);
+    });
+
+    document.getElementById("saveBtn").addEventListener(
+      "click",
+      saveEdits
+    );
+
+    document.getElementById("copyBtn").addEventListener(
+      "click",
+      copySummary
+    );
+
+    document.getElementById("resetBtn").addEventListener(
+      "click",
+      resetEdits
+    );
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      setEditable(false);
+      document.body.classList.remove("admin-on");
+      showToast(t("logoutDone"));
+    });
+
+    setTheme(state.theme);
+    applyTranslations();
+    loadWeather();
+
+    /* อัปเดตข้อมูลทุก 10 นาที */
+    setInterval(loadWeather, 10 * 60 * 1000);
+  </script>
+</body>
+</html>
